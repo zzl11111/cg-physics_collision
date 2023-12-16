@@ -13,6 +13,7 @@ public:
 	glm::vec3 get_CenterOfMass()const {
 		return mass_center;//it is the local space center
 	}
+	virtual mat3 get_Ineritial_mat3(float mass=1e5f)const = 0;
 	virtual void Draw() = 0;
 	glm::vec3 mass_center;
 	Mesh mesh;
@@ -21,7 +22,7 @@ public:
 class Body {
 public:
 
-	Body(std::shared_ptr<Model>_shape, glm::vec3 position, glm::vec3 velocity = glm::vec3(0, 0, 0), quat rotation = quat(1, 0, 0, 0), float inv_mass = 1.0) :
+	Body(Model * _shape, glm::vec3 position, glm::vec3 velocity = glm::vec3(0, 0, 0), quat rotation = quat(1, 0, 0, 0), float inv_mass = 1.0) :
 		shape(_shape), m_position(position), m_velocity(velocity), m_rotation(rotation), m_inv_mass(inv_mass)
 	{
 
@@ -50,15 +51,31 @@ public:
 		model = glm::translate(model, m_position);
 		return model;//model matrix is related to the model 
 	}
+	void Process_Impulse(const vec3 &impulse) {
+		m_velocity += impulse * m_inv_mass;
+	}
+	mat3 get_Inertial_mat3_local() {
+		mat3 Inertial;
+		if (m_inv_mass != 0) {
+			Inertial = shape->get_Ineritial_mat3(1 / m_inv_mass);
+		}
+		else {
+			Inertial= shape->get_Ineritial_mat3();
+		}
+		return Inertial;
 
-
-
+	}
+	mat3 get_Inertial_mat3_world() {
+		mat3 Inertial = get_Inertial_mat3_local();
+		mat3 rotation_matrix = mat3(m_rotation);
+		
+	}
 public:
-	std::shared_ptr<Model> shape;
+	Model *shape;
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
 	glm::quat m_rotation;
-
+	float elasticity = 1;
 	float m_inv_mass;
 
 

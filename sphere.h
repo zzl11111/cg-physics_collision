@@ -3,14 +3,24 @@
 #include "body.h"
 
 
-constexpr const int sector_count = 32;
-constexpr const int stack_count = 32;
+constexpr const int sector_count = 540;
+constexpr const int stack_count = 540;
 constexpr const float sectorstep = 2 * PI / sector_count;
 constexpr const float stackstep = PI / stack_count;
 class Sphere :public Model {
 public:
 	virtual unsigned int Get_Type()const {
 		return SPHERE;
+	}
+	virtual mat3 get_Ineritial_mat3(float mass)const {
+	//set the ineria in local world
+		mat3 mat(1.0f);
+		float ineria = 2 / 5 * mass * radius * radius;
+		for (int i = 0; i < 3; i++) {
+			mat[i][i] = ineria;
+		}
+		return mat;
+
 	}
 	Sphere(float _radius):radius(_radius) {
 		mass_center = glm::vec3(0,0,0);
