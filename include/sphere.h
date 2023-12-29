@@ -12,9 +12,9 @@ public:
 	virtual unsigned int Get_Type()const {
 		return SPHERE;
 	}
-	virtual mat3 get_Ineritial_mat3(float mass)const {
+	virtual  glm::mat3 get_Ineritial_mat3(float mass)const {
 	//set the ineria in local world
-		mat3 mat(1.0f);
+		glm::mat3 mat(1.0f);
 		float ineria = 2 / 5 * mass * radius * radius;
 		for (int i = 0; i < 3; i++) {
 			mat[i][i] = ineria;

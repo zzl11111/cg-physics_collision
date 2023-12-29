@@ -43,8 +43,8 @@ public:
     void setFloat(const std::string& name, GLfloat value) const;
     void setMat3(const std::string& name, const glm::mat3& value) const;
     void setMat4(const std::string& name, const glm::mat4& value) const;
-    void setVec3(const std::string& name, const glm::glm::vec3& value) const;
-    void setVec4(const std::string& name, const glm:vec4& value) const;
+    void setVec3(const std::string& name, const glm::vec3& value) const;
+    void setVec4(const std::string& name, const glm::vec4& value) const;
 private:
     GLuint id = 0;
 };
@@ -241,7 +241,7 @@ void Shader::setVec3(const std::string& name, const glm::vec3& value) const
     glUniform3fv(getUniformLocation(name), 1, glm::value_ptr(value));
 }
 
-void Shader::setVec4(const std::string& name, const glm:vec4& value) const
+void Shader::setVec4(const std::string& name, const glm::vec4& value) const
 {
     glUniform4fv(getUniformLocation(name), 1, glm::value_ptr(value));
 }

@@ -69,7 +69,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 }
 int main() {
 	Show_Window opengl_window(800, 600, name);
-	Shader shaderProgram("src\\blin.vs", "src\\blin.fs");
+	Shader shaderProgram("..\\src\\blin.vs", "..\\src\\blin.fs");
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);

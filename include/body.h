@@ -1,7 +1,6 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 #include "mesh.h"
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 enum model_type {
   SPHERE = 0,
@@ -24,7 +23,7 @@ class Body {
 public:
   Body(Model *_shape, glm::vec3 position,
        glm::vec3 velocity = glm::vec3(0, 0, 0),
-       quat rotation = glm::quat(1, 0, 0, 0), float inv_mass = 1.0)
+       glm::quat rotation = glm::quat(1, 0, 0, 0), float inv_mass = 1.0)
       : shape(_shape), m_position(position), m_velocity(velocity),
         m_rotation(rotation), m_inv_mass(inv_mass) {}
   glm::vec3 get_CenterofWorldSpace() const {
@@ -39,7 +38,7 @@ public:
   } // modelspace and world space
   glm::vec3 World_To_Local_space(const glm::vec3 &position) const {
     glm::vec3 position_to_center = position - get_CenterofWorldSpace();
-    quat inverse_quat =
+    glm::quat inverse_quat =
         glm::quat(m_rotation.w, -m_rotation.x, -m_rotation.y, -m_rotation.z);
     return inverse_quat * position_to_center;
   }
@@ -53,7 +52,7 @@ public:
     model = glm::translate(model, m_position);
     return model; // model matrix is related to the model
   }
-  void Process_Impulse(const vec3 &impulse) {
+  void Process_Impulse(const glm::vec3 &impulse) {
     m_velocity += impulse * m_inv_mass;
   }
   glm::mat3 get_Inertial_mat3_local() {

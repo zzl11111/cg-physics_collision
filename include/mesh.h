@@ -2,15 +2,14 @@
 #define MESH_H
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-class A{
-
-};
-struct Vertex {
+class Vertex {
+	public:
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 texcoords;
 };
-struct Texture {
+class Texture {
+	public:
 	unsigned int tex_id;
 	std::string texture_name;
 

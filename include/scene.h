@@ -4,7 +4,7 @@
 #include "utility.h"
 #include "sphere.h"
 #include "contact.h"
-glm::glm::vec3 gravity(0, -10.0, 0);
+glm::vec3 gravity(0, -10.0, 0);
 bool check_collision( Body& body1,  Body& body2,Contact &contact) {
 	glm::vec3 position_between_body2_body1 = body2.m_position - body1.m_position;
 	contact.normal = normalize(position_between_body2_body1);//the collision point vector (b-a)
@@ -47,10 +47,10 @@ public:
 	}
 	void Create_Scene() {
 		int num_objs = 1;
-		Body obj(new Sphere(1), glm::vec3(0, 0,0), glm::vec3(0, 0, 0), quat(1, 0, 0, 0), 1.0);
+		Body obj(new Sphere(1), glm::vec3(0, 0,0), glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), 1.0);
 		obj.elasticity = 0.95;
 		objs.push_back(obj);
-		Body ground(new Sphere(100), glm::vec3(0, -103, 0), glm::vec3(0, 0, 0), quat(1, 0, 0, 0), 0);
+		Body ground(new Sphere(100), glm::vec3(0, -103, 0), glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), 0);
 		ground.elasticity = 0.99;
 		objs.push_back(ground);
 		

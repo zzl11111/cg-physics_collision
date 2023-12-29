@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <string>
+#include <vector>
 const float PI = 3.1415926f;
 inline float degrees_to_radians(float degrees) {
 	return degrees * PI / 180;
