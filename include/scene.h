@@ -4,9 +4,9 @@
 #include "utility.h"
 #include "sphere.h"
 #include "contact.h"
-glm::vec3 gravity(0, -10.0, 0);
+glm::glm::vec3 gravity(0, -10.0, 0);
 bool check_collision( Body& body1,  Body& body2,Contact &contact) {
-	vec3 position_between_body2_body1 = body2.m_position - body1.m_position;
+	glm::vec3 position_between_body2_body1 = body2.m_position - body1.m_position;
 	contact.normal = normalize(position_between_body2_body1);//the collision point vector (b-a)
 
 	double length = std::sqrt(dot(position_between_body2_body1,position_between_body2_body1));
@@ -25,15 +25,15 @@ void Process_collision(Contact& contact) {
 	Body* A = contact.A;
 	Body* B = contact.B;
 	float elasticity = A->elasticity * B->elasticity;
-	//vec3 J = (1 + elasticity) * (B->m_velocity - A->m_velocity) / (A->m_inv_mass + B->m_inv_mass);
-	vec3 J = (1 + elasticity) * dot((B->m_velocity - A->m_velocity),contact.normal)*contact.normal / (A->m_inv_mass + B->m_inv_mass);//we only apply impulse through the vector of contact_normal
+	//glm::vec3 J = (1 + elasticity) * (B->m_velocity - A->m_velocity) / (A->m_inv_mass + B->m_inv_mass);
+	glm::vec3 J = (1 + elasticity) * dot((B->m_velocity - A->m_velocity),contact.normal)*contact.normal / (A->m_inv_mass + B->m_inv_mass);//we only apply impulse through the vector of contact_normal
 
 
 	A->Process_Impulse(J);
 	B->Process_Impulse(-J);
 	float tA = A->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
 	float tB = B->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
-	vec3 ds = contact.B_potential_collision_point_world_space - contact.A_potential_collision_point_world_space;
+	glm::vec3 ds = contact.B_potential_collision_point_world_space - contact.A_potential_collision_point_world_space;
 	A->m_position += tA * ds;
 	B->m_position -= tB * ds;
 }
@@ -47,10 +47,10 @@ public:
 	}
 	void Create_Scene() {
 		int num_objs = 1;
-		Body obj(new Sphere(1), vec3(0, 0,0), vec3(0, 0, 0), quat(1, 0, 0, 0), 1.0);
+		Body obj(new Sphere(1), glm::vec3(0, 0,0), glm::vec3(0, 0, 0), quat(1, 0, 0, 0), 1.0);
 		obj.elasticity = 0.95;
 		objs.push_back(obj);
-		Body ground(new Sphere(100), vec3(0, -103, 0), vec3(0, 0, 0), quat(1, 0, 0, 0), 0);
+		Body ground(new Sphere(100), glm::vec3(0, -103, 0), glm::vec3(0, 0, 0), quat(1, 0, 0, 0), 0);
 		ground.elasticity = 0.99;
 		objs.push_back(ground);
 		
@@ -67,7 +67,7 @@ public:
 					Process_collision(contact);
 				}
 				else {
-					vec3 impulse = 1.0f / objs[i].m_inv_mass * gravity * delta_time;
+					glm::vec3 impulse = 1.0f / objs[i].m_inv_mass * gravity * delta_time;
 					objs[i].Process_Impulse(impulse);
 				}
 			}

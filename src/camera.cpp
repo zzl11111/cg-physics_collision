@@ -1,5 +1,5 @@
 #include "camera.h"
-Camera::Camera(vec3 origin, vec3 lookat, vec3 up)
+Camera::Camera(glm::vec3 origin, glm::vec3 lookat, glm::vec3 up)
 {
     camera_pos = origin;
     camera_front = normalize(lookat - origin);
@@ -60,7 +60,7 @@ void Camera::Process_camera(unsigned int direction, float delta_time) {
     Process_camera_keyboard(direction, delta_time);
 
 }
-mat4 Camera::get_View_Matrix() {
+glm::mat4 Camera::get_View_Matrix() {
     return glm::lookAt(camera_pos, camera_pos + camera_front, camera_up);
 
 }

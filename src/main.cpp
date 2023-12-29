@@ -11,12 +11,12 @@ constexpr const int width = 800;
 constexpr const int height = 600;
 std::string name = "aa";
 //WE use glm instead
-vec3 camera_pos(2, 3, 10);
+glm::vec3 camera_pos(2, 3, 10);
 bool is_first = false;
 float last_x;
 float last_y;
-Camera cam(camera_pos, vec3(0, 0, 0));
-vec3 lightPos(1, 3, 2);
+Camera cam(camera_pos, glm::vec3(0, 0, 0));
+glm::vec3 lightPos(1, 3, 2);
 void Process_Input(GLFWwindow* window, float delta_time )
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -88,14 +88,14 @@ int main() {
 		/*shaderProgram.setMat4("projection", projection);*/
 
 		//shaderProgram.setOpenGl_Mat4("model", opengl_model);
-		mat4 model = glm::mat4(1.0f);
+		glm::mat4 model = glm::mat4(1.0f);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setVec3("lightPos", lightPos);
 		shaderProgram.setVec3("viewPos", camera_pos);
-		shaderProgram.setVec3("lightColor",vec3(1,1,1));
-		shaderProgram.setVec3("objectColor", vec3(1, 1, 1));
+		shaderProgram.setVec3("lightColor",glm::vec3(1,1,1));
+		shaderProgram.setVec3("objectColor", glm::vec3(1, 1, 1));
 		float delta_time = glfwGetTime() - current_frame_time;
 		int  num = 100;
 		for (int i = 0; i < num; i++) {

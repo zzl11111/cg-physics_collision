@@ -2,7 +2,9 @@
 #define MESH_H
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#include "utility.h"
+class A{
+
+};
 struct Vertex {
 	glm::vec3 position;
 	glm::vec3 normal;
