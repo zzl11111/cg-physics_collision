@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 #include "utility.h"
 constexpr const float camera_speed = 80.0f;
 enum   Direction
@@ -30,7 +29,3 @@ public:
 	float scroll_sensity = 0.2;
 	float fov = 45.0f;
 };
-
-
-
-#endif

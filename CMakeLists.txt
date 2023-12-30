@@ -6,8 +6,9 @@
 
 cmake_minimum_required(VERSION 3.18)
 
-project(rigid-body-simulation)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_STANDARD 20)
+project(rigid-body-simulation LANGUAGES C CXX)
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 # ######### External liberaries #############
 # glfw
@@ -31,12 +32,10 @@ list(APPEND DEPENDENCIES glm::glm)
 # Add the main library
 add_library(libmain
     src/camera.cpp
-src/blin.fs
-src/blin.vs
     ${GLAD_SRC}
 )
 target_include_directories(libmain
-    PUBLIC include
+    PUBLIC ${CMAKE_SOURCE_DIR}/include
 )
 target_link_libraries(libmain PUBLIC ${DEPENDENCIES})
 

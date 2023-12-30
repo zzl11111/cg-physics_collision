@@ -1,5 +1,5 @@
-#ifndef CONTACT_H
-#define CONTACT_H
+#pragma once
+
 #include "body.h"
 class Contact {
 public:
@@ -14,5 +14,3 @@ public:
 	float time;
 	glm::vec3 normal;
 };
-
-#endif

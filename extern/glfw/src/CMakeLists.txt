@@ -127,7 +127,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
 
     if (CMAKE_C_SIMULATE_ID STREQUAL "MSVC")
         # Tell Clang-CL that this is a Clang flag
-        target_compile_options(glfw PRIVATE "/clang:-Wall")
+        target_compile_options(glfw PRIVATE "-Wall")
     else()
         target_compile_options(glfw PRIVATE "-Wall")
     endif()

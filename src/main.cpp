@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "scene.h"
 #include "utility.h"
+
 constexpr const int width = 800;
 constexpr const int height = 600;
 std::string name = "aa";
@@ -67,9 +68,10 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 	last_y = y;
 	cam.Process_camera_mouse(xoffset, yoffset);
 }
+
 int main() {
 	Show_Window opengl_window(800, 600, name);
-	Shader shaderProgram("..\\src\\blin.vs", "..\\src\\blin.fs");
+	Shader shaderProgram("blin.vs", "blin.fs");
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);
