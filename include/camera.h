@@ -1,6 +1,6 @@
 #pragma once
 #include "utility.h"
-constexpr const float camera_speed = 80.0f;
+constexpr const float camera_speed = 100.0f;
 enum   Direction
 {
 	FRONT, BACK, LEFT, RIGHT, UP, DOWN

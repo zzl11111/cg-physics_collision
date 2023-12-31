@@ -12,7 +12,7 @@ constexpr const int width = 800;
 constexpr const int height = 600;
 std::string name = "aa";
 //WE use glm instead
-glm::vec3 camera_pos(2, 3, 10);
+glm::vec3 camera_pos(2, 3, 30);
 bool is_first = false;
 float last_x;
 float last_y;
@@ -71,7 +71,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 
 int main() {
 	Show_Window opengl_window(800, 600, name);
-	Shader shaderProgram("blin.vs", "blin.fs");
+	Shader shaderProgram("src\\blin.vs", "src\\blin.fs");
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);

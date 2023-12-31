@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-
 enum model_type {
   SPHERE = 0,
 };
@@ -57,7 +56,7 @@ public:
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, m_position);
 
-    model = glm::mat4(m_rotation) * model;
+    model =  model*glm::mat4(m_rotation) ;
     return model; // model matrix is related to the model
   }
   void Process_Impulse(const glm::vec3 &impulse_point,
@@ -83,8 +82,12 @@ public:
       return;
     }
     m_angular_velocity +=
-        get_Inertial_inverse_mat3_world() * 10.0f * angular_impulse; // w+=L/I
+        get_Inertial_inverse_mat3_world()  * angular_impulse; // w+=L/I
     // std::cout << m_angular_velocity;
+    float max_angular_speed=30.0f;
+    if(glm::length(m_angular_velocity)>=max_angular_speed){
+      m_angular_velocity=max_angular_speed*glm::normalize(m_angular_velocity);
+    }
   }
   glm::mat3 get_Inertial_mat3_local() {
     glm::mat3 Inertial;
@@ -104,7 +107,7 @@ public:
   }
   glm::mat3 get_Inertial_inverse_mat3_world() {
     glm::mat3 Inertial = get_Inertial_mat3_local();
-    glm::mat3 rotation_matrix = glm::mat3(m_rotation);
+    glm::mat3 rotation_matrix = glm::mat3(glm::normalize(m_rotation));
     return rotation_matrix * glm::inverse(Inertial) *
            glm::transpose(rotation_matrix);
     // R *I-1*R^T
@@ -113,18 +116,20 @@ public:
   // update the position
   {
 
-    glm::vec3 dAngle = m_angular_velocity * dt;
-
-    glm::quat dq = get_quat_from_n_and_angle(dAngle, glm::length(dAngle));
     glm::vec3 cmTopos = m_position - get_CenterofWorldSpace();
     glm::vec3 alpha = get_Inertial_inverse_mat3_world() *
                       (cross(m_angular_velocity,
                              get_Inertial_mat3_world() * m_angular_velocity));
+    // process the internal torque
     m_angular_velocity += alpha * dt;
+    
+    glm::vec3 dAngle = m_angular_velocity * dt;
+
+    glm::quat dq = get_quat_from_n_and_angle(dAngle, glm::length(dAngle));
     m_rotation = dq * m_rotation;
     m_rotation = glm::normalize(m_rotation);
     m_position = m_position + m_linear_velocity * dt;
-    m_position += dq * cmTopos;
+    m_position =get_CenterofWorldSpace()+ dq * cmTopos;
   }
 
 public:
@@ -135,4 +140,5 @@ public:
   glm::vec3 m_angular_velocity;
   float elasticity = 1;
   float m_inv_mass;
+  float m_friction=0.8f;
 };
