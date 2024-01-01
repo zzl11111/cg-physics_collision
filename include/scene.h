@@ -2,12 +2,40 @@
 
 #include "body.h"
 #include "contact.h"
+#include "ray.h"
+#include "scene.h"
 #include "shader_program.h"
 #include "sphere.h"
 #include "utility.h"
 
 glm::vec3 gravity(0, -10.0, 0);
-inline bool check_collision(Body &body1, Body &body2, Contact &contact) {
+inline bool check_collision(Body &body1, Body &body2, Contact &contact,
+                            float dt) {
+  contact.A = &body1;
+  contact.B = &body2;
+  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) {
+    const Sphere *sphere_A = (const Sphere *)body1.shape;
+    const Sphere *sphere_B = (const Sphere *)body2.shape;
+    if (Sphere_Sphere_Dynamic(
+            sphere_A, sphere_B, body1.m_position, body2.m_position,
+            body1.m_linear_velocity, body2.m_linear_velocity, dt,
+            contact.A_potential_collision_point_world_space,
+            contact.B_potential_collision_point_world_space, contact.time_of_impact)) {
+              //the collision happen in time_of_impact;
+              body1.Update(contact.time_of_impact);
+              body2.Update(contact.time_of_impact);
+              contact.A_potential_collision_point_local_space=body1.World_To_Local_space(contact.A_potential_collision_point_world_space);
+            contact.B_potential_collision_point_local_space=body2.World_To_Local_space(contact.B_potential_collision_point_world_space);
+            body1.Update(-contact.time_of_impact);
+            body2.Update(-contact.time_of_impact);
+            //return back
+            glm::vec3 p_a_b=body2.m_position-body1.m_position;
+            float r=glm::length(p_a_b)-(sphere_A->radius+sphere_B->radius);
+            contact.seperation_distance=r;
+            return true;
+
+    }
+  }
   glm::vec3 position_between_body2_body1 = body2.m_position - body1.m_position;
   contact.normal =
       normalize(position_between_body2_body1); // the collision point vector
@@ -17,8 +45,6 @@ inline bool check_collision(Body &body1, Body &body2, Contact &contact) {
       dot(position_between_body2_body1, position_between_body2_body1));
   auto sphere_1 = (const Sphere *)body1.shape;
   auto sphere_2 = (const Sphere *)body2.shape;
-  contact.A = &body1;
-  contact.B = &body2;
 
   contact.A_potential_collision_point_world_space =
       body1.m_position + contact.normal * sphere_1->radius;
@@ -29,6 +55,7 @@ inline bool check_collision(Body &body1, Body &body2, Contact &contact) {
   // this function will check collision and update the collision point in
   // contact
 }
+
 inline void Process_collision(Contact &contact) {
   Body *A = contact.A;
   Body *B = contact.B;
@@ -82,7 +109,7 @@ inline void Process_collision(Contact &contact) {
                      -impulse_Friction);
   B->Process_Impulse(contact.B_potential_collision_point_world_space,
                      impulse_Friction);
-  //std::cout << A->m_linear_velocity << B->m_linear_velocity;
+  // std::cout << A->m_linear_velocity << B->m_linear_velocity;
   float tA = A->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
   float tB = B->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
   glm::vec3 ds = contact.B_potential_collision_point_world_space -
@@ -99,18 +126,18 @@ public:
     Body obj(new Sphere(2), glm::vec3(0, 2, 0), glm::vec3(1, 0, 0),
              glm::quat(1, 0, 0, 0), 1.0);
     obj.elasticity = 0.9;
-    obj.m_friction=1.0;
+    obj.m_friction = 1.0;
     objs.push_back(obj);
-       Body obj2(new Sphere(2), glm::vec3(1, 3, 0), glm::vec3(1, 0, 0),
-             glm::quat(1, 0, 0, 0), 1.0);
+    Body obj2(new Sphere(2), glm::vec3(1, 3, 0), glm::vec3(1, 0, 0),
+              glm::quat(1, 0, 0, 0), 1.0);
     obj2.elasticity = 0.9;
-    obj2.m_friction=1.0;
+    obj2.m_friction = 1.0;
     objs.push_back(obj2);
     Body ground(new Sphere(8000), glm::vec3(0, -8003, 0), glm::vec3(0, 0, 0),
                 glm::quat(1, 0, 0, 0), 0);
 
     ground.elasticity = 0.99;
-    ground.m_friction=0.9;
+    ground.m_friction = 0.9;
     objs.push_back(ground);
   }
   void Update(float delta_time) {
@@ -120,7 +147,7 @@ public:
       bool collision = false;
       for (int j = i + 1; j < objs.size(); j++) {
         Contact contact;
-        collision = check_collision(objs[i], objs[j], contact);
+        collision = check_collision(objs[i], objs[j], contact, delta_time);
         if (collision) {
           Process_collision(contact);
         } else {
