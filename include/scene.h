@@ -14,44 +14,60 @@ inline bool check_collision(Body &body1, Body &body2, Contact &contact,
   contact.A = &body1;
   contact.B = &body2;
   if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) {
+
     const Sphere *sphere_A = (const Sphere *)body1.shape;
     const Sphere *sphere_B = (const Sphere *)body2.shape;
-    if (Sphere_Sphere_Dynamic(
-            sphere_A, sphere_B, body1.m_position, body2.m_position,
-            body1.m_linear_velocity, body2.m_linear_velocity, dt,
-            contact.A_potential_collision_point_world_space,
-            contact.B_potential_collision_point_world_space, contact.time_of_impact)) {
-              //the collision happen in time_of_impact;
-              body1.Update(contact.time_of_impact);
-              body2.Update(contact.time_of_impact);
-              contact.A_potential_collision_point_local_space=body1.World_To_Local_space(contact.A_potential_collision_point_world_space);
-            contact.B_potential_collision_point_local_space=body2.World_To_Local_space(contact.B_potential_collision_point_world_space);
-            body1.Update(-contact.time_of_impact);
-            body2.Update(-contact.time_of_impact);
-            //return back
-            glm::vec3 p_a_b=body2.m_position-body1.m_position;
-            float r=glm::length(p_a_b)-(sphere_A->radius+sphere_B->radius);
-            contact.seperation_distance=r;
-            return true;
+    // if (1) {
+    //   glm::vec3 position_between_body2_body1 =
+    //       body2.m_position - body1.m_position;
+    //   contact.normal =
+    //       normalize(position_between_body2_body1); // the collision point
+    //       vector
+    //                                                // (b-a) maintain
+    //                                                normalize
 
+    //   double length = std::sqrt(
+    //       dot(position_between_body2_body1, position_between_body2_body1));
+    //   auto sphere_1 = (const Sphere *)body1.shape;
+    //   auto sphere_2 = (const Sphere *)body2.shape;
+
+    //   contact.A_potential_collision_point_world_space =
+    //       body1.m_position + contact.normal * sphere_1->radius;
+    //   contact.B_potential_collision_point_world_space =
+    //       body2.m_position - contact.normal * sphere_2->radius;
+    //   double radius_AB = sphere_1->radius + sphere_2->radius;
+    //   return radius_AB > length;
+    // }
+    if (Sphere_Sphere_Dynamic(sphere_A, sphere_B, body1.m_position,
+                              body2.m_position, body1.m_linear_velocity,
+                              body2.m_linear_velocity, dt,
+                              contact.A_potential_collision_point_world_space,
+                              contact.B_potential_collision_point_world_space,
+                              contact.time_of_impact)) {
+      // the collision happen in time_of_impact;
+      contact.normal = glm::normalize(body2.m_position - body1.m_position);
+      body1.Update(contact.time_of_impact);
+      body2.Update(contact.time_of_impact);
+      contact.A_potential_collision_point_local_space =
+          body1.World_To_Local_space(
+              contact.A_potential_collision_point_world_space);
+
+      contact.B_potential_collision_point_local_space =
+          body2.World_To_Local_space(
+              contact.B_potential_collision_point_world_space);
+      body1.Update(-contact.time_of_impact);
+      body2.Update(-contact.time_of_impact);
+      // return back
+      glm::vec3 p_a_b = body2.m_position - body1.m_position;
+      float r = glm::length(p_a_b) - (sphere_A->radius + sphere_B->radius);
+      contact.seperation_distance = r;
+      return true;
+
+    } else {
+      return false;
     }
   }
-  glm::vec3 position_between_body2_body1 = body2.m_position - body1.m_position;
-  contact.normal =
-      normalize(position_between_body2_body1); // the collision point vector
-                                               // (b-a) maintain normalize
-
-  double length = std::sqrt(
-      dot(position_between_body2_body1, position_between_body2_body1));
-  auto sphere_1 = (const Sphere *)body1.shape;
-  auto sphere_2 = (const Sphere *)body2.shape;
-
-  contact.A_potential_collision_point_world_space =
-      body1.m_position + contact.normal * sphere_1->radius;
-  contact.B_potential_collision_point_world_space =
-      body2.m_position - contact.normal * sphere_2->radius;
-  double radius_AB = sphere_1->radius + sphere_2->radius;
-  return radius_AB > length;
+  return false;
   // this function will check collision and update the collision point in
   // contact
 }
@@ -103,7 +119,7 @@ inline void Process_collision(Contact &contact) {
                                  cross(rb, v_relate_tangent_normalized),
                              rb);
   float invInertia = dot((inertiaA + inertiaB), v_relate_tangent_normalized);
-  float reducedMass = 3.0f / (A->m_inv_mass + B->m_inv_mass + invInertia);
+  float reducedMass = 1.0f / (A->m_inv_mass + B->m_inv_mass + invInertia);
   glm::vec3 impulse_Friction = v_relate_tangent * reducedMass * friction;
   A->Process_Impulse(contact.A_potential_collision_point_world_space,
                      -impulse_Friction);
@@ -126,18 +142,18 @@ public:
     Body obj(new Sphere(2), glm::vec3(0, 2, 0), glm::vec3(1, 0, 0),
              glm::quat(1, 0, 0, 0), 1.0);
     obj.elasticity = 0.9;
-    obj.m_friction = 1.0;
+    obj.m_friction = 1.1;
     objs.push_back(obj);
-    Body obj2(new Sphere(2), glm::vec3(1, 3, 0), glm::vec3(1, 0, 0),
+    Body obj2(new Sphere(2), glm::vec3(1, 3, 0), glm::vec3(0.2, 0, 0),
               glm::quat(1, 0, 0, 0), 1.0);
     obj2.elasticity = 0.9;
     obj2.m_friction = 1.0;
     objs.push_back(obj2);
-    Body ground(new Sphere(8000), glm::vec3(0, -8003, 0), glm::vec3(0, 0, 0),
+    Body ground(new Sphere(10000), glm::vec3(0, -10003, 0), glm::vec3(0, 0, 0),
                 glm::quat(1, 0, 0, 0), 0);
 
-    ground.elasticity = 0.99;
-    ground.m_friction = 0.9;
+    ground.elasticity = 0.9;
+    ground.m_friction = 1.03;
     objs.push_back(ground);
   }
   void Update(float delta_time) {

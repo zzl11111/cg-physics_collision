@@ -1,6 +1,7 @@
 #pragma once
 #include "body.h"
 #include "ray.h"
+#include "utility.h"
 const int sector_count = 540;
 const int stack_count = 540;
 const float sectorstep = 2 * 3.1415 / sector_count;
@@ -73,9 +74,12 @@ public:
 };
 inline bool Ray_Sphere_Collision(Ray &r, const glm::vec3 &sphere_Center,
                                  float Sphere_radius, float &t_in,
+
                                  float &t_out) {
+
   glm::vec3 OR = sphere_Center - r.origin;
   float a = dot(r.dir, r.dir);
+
   float b = dot(OR, r.dir);
   float c = dot(OR, OR) - Sphere_radius * Sphere_radius;
   float delta = b * b - a * c;
@@ -93,21 +97,22 @@ inline bool Sphere_Sphere_Dynamic(
     const glm::vec3 &position_B, const glm::vec3 &v_A, const glm::vec3 &v_B,
     const float dt, glm::vec3 &A_potential_collision_point_world_space,
     glm::vec3 &B_potential_collision_point_world_space, float &time_of_impact) {
+
   glm::vec3 related_v = v_A - v_B;
   Ray r;
   r.origin = position_A;
   r.dir = related_v * dt;
-  if (glm::length(r.dir) < 0.001f * 0.001f) {
+  float t0 = 0, t1 = 0;
+  if (glm::length(r.dir) == 0) {
     glm::vec3 p_a_b = position_B - position_A;
     // check collision directly
     float radius = sphereA->radius + sphereB->radius + 0.001f;
-    if (glm::length(p_a_b) > radius * radius) {
+    if (glm::length(p_a_b) > radius) {
       return false;
     }
-  }
-  float t0, t1;
-  if (!Ray_Sphere_Collision(r, position_B, sphereA->radius + sphereB->radius,
-                            t0, t1)) {
+    return false;
+  } else if (!Ray_Sphere_Collision(r, position_B,
+                                   sphereA->radius + sphereB->radius, t0, t1)) {
     return false;
   }
   t0 *= dt;
