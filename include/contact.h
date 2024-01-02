@@ -10,7 +10,10 @@ public:
 	glm::vec3 B_potential_collision_point_world_space;
 	glm::vec3 A_potential_collision_point_local_space;
 	glm::vec3 B_potential_collision_point_local_space;
-	float distance;
-	float time;
+	float seperation_distance=0;
+	float time_of_impact=0;
+
 	glm::vec3 normal;
 };
+inline bool CompareContacts(const Contact *contact1,const Contact *contact2);
+ 

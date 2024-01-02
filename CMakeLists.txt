@@ -32,6 +32,8 @@ list(APPEND DEPENDENCIES glm::glm)
 # Add the main library
 add_library(libmain
     src/camera.cpp
+    src/sphere.cpp
+    src/contact.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain
