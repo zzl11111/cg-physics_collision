@@ -83,7 +83,7 @@ void Sphere::setup_Mesh() {
 	}
 
 	// set texture
-	mesh.texture_id = load_texture("resources\\container2.png");
+	mesh.texture_id = load_texture("..\\resources\\container2.png");
 }
 
 glm::mat3 Sphere::get_Ineritial_mat3(float mass) const {
@@ -98,7 +98,6 @@ bool Ray_Sphere_Collision(Ray &r, const glm::vec3 &sphere_Center,
 						  float &t_out) {
 	glm::vec3 OR = sphere_Center - r.origin;
 	float a = dot(r.dir, r.dir);
-
 	float b = dot(OR, r.dir);
 	float c = dot(OR, OR) - Sphere_radius * Sphere_radius;
 	float delta = b * b - a * c;
@@ -117,40 +116,47 @@ bool Sphere_Sphere_Dynamic(const Sphere *sphereA, const Sphere *sphereB,
                            glm::vec3 &A_potential_collision_point_world_space,
                            glm::vec3 &B_potential_collision_point_world_space,
                            float &time_of_impact) {
+	glm::vec3 related_v = v_A - v_B;
+	Ray r;
+	r.origin = position_A;
+	r.dir = related_v * dt;
+	float t0 = 0, t1 = 0;
+	if (glm::length(r.dir) == 0) {
+		glm::vec3 p_a_b = position_B - position_A;
+		// check collision directly
+		float radius = sphereA->radius + sphereB->radius + 0.001f;
+		if (glm::length(p_a_b) > radius) { return false; }
+		return false;
+	} else if (!Ray_Sphere_Collision(r, position_B,
+									sphereA->radius + sphereB->radius, t0, t1)) {
+		return false;
+	}
+	t0 *= dt;
+	t1 *= dt;
+	if (t1 < 0.0f) { return false; }
+	time_of_impact = t0 < 0.0f ? 0.0f : t0;
+	if (time_of_impact > dt) { return false; }
+	glm::vec3 newP_A = position_A + v_A * time_of_impact;
+	glm::vec3 newP_B = position_B + v_B * time_of_impact;
+	glm::vec3 normal = newP_B - newP_A;
+	if (glm::length(normal) != 0) {
+		normal = glm::normalize(normal);
+	}
+	A_potential_collision_point_world_space = newP_A + normal * sphereA->radius;
+	B_potential_collision_point_world_space = newP_B - normal * sphereB->radius;
+	return true;
+}
 
-  glm::vec3 related_v = v_A - v_B;
-  Ray r;
-  r.origin = position_A;
-  r.dir = related_v * dt;
-  float t0 = 0, t1 = 0;
-  if (glm::length(r.dir) == 0) {
-    glm::vec3 p_a_b = position_B - position_A;
-    // check collision directly
-    float radius = sphereA->radius + sphereB->radius + 0.001f;
-    if (glm::length(p_a_b) > radius) {
-      return false;
-    }
-    return false;
-  } else if (!Ray_Sphere_Collision(r, position_B,
-                                   sphereA->radius + sphereB->radius, t0, t1)) {
-    return false;
-  }
-  t0 *= dt;
-  t1 *= dt;
-  if (t1 < 0.0f) {
-    return false;
-  }
-  time_of_impact = t0 < 0.0f ? 0.0f : t0;
-  if (time_of_impact > dt) {
-    return false;
-  }
-  glm::vec3 newP_A = position_A + v_A * time_of_impact;
-  glm::vec3 newP_B = position_B + v_B * time_of_impact;
-  glm::vec3 normal = newP_B - newP_A;
-  if (glm::length(normal) != 0) {
-    normal = glm::normalize(normal);
-  }
-  A_potential_collision_point_world_space = newP_A + normal * sphereA->radius;
-  B_potential_collision_point_world_space = newP_B - normal * sphereB->radius;
-  return true;
+Bounds Sphere::getBounds(const glm::vec3 & pos, const glm::quat & orient) const {
+	Bounds bounds;
+	bounds.mins = pos - glm::vec3(radius, radius, radius);
+	bounds.maxs = pos + glm::vec3(radius, radius, radius);
+	return bounds;
+}
+
+Bounds Sphere::getBounds() const {
+	Bounds bounds;
+	bounds.mins = glm::vec3(-radius);
+	bounds.maxs = glm::vec3(radius);
+	return bounds;
 }
