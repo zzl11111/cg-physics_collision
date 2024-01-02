@@ -130,7 +130,6 @@ bool Sphere_Sphere_Dynamic(const Sphere *sphereA, const Sphere *sphereB,
     if (glm::length(p_a_b) > radius) {
       return false;
     }
-    return false;
   } else if (!Ray_Sphere_Collision(r, position_B,
                                    sphereA->radius + sphereB->radius, t0, t1)) {
     return false;
