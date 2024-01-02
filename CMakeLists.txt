@@ -34,6 +34,7 @@ add_library(libmain
     src/camera.cpp
     src/sphere.cpp
     src/contact.cpp
+    src/body.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain
