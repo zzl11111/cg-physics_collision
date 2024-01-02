@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utility.h"
+#include "bound.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
@@ -42,6 +43,8 @@ public:
 	glm::vec3 get_CenterOfMass() const { return mass_center; }
 	virtual glm::mat3 get_Ineritial_mat3(float mass = 1.0f) const = 0;
 	virtual void Draw() = 0;
+	virtual Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const = 0;
+	virtual Bounds getBounds() const = 0;
 
 public:
 	glm::vec3 mass_center;
