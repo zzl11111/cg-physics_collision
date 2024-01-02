@@ -19,7 +19,7 @@ void main() {
     vec3 norm = normalize(world_normal);
     vec3 lightDir = normalize(lightPos - world_position);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor * texture(diffuse_sampler, texcoords).rgb;
+    vec3 diffuse = 2*diff * lightColor * texture(diffuse_sampler, texcoords).rgb;
     // specular
     float specularStrength = 0.5;
     vec3 viewDir = normalize(viewPos - world_position);
