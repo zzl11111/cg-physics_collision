@@ -15,3 +15,4 @@ public:
 
 	glm::vec3 normal;
 };
+
