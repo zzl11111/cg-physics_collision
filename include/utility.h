@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+
 const float PI = 3.1415926f;
 const float epsilon = 1e-6;
 inline float degrees_to_radians(float degrees) { return degrees * PI / 180; }
