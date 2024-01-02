@@ -3,7 +3,9 @@ out vec4 FragColor;
 
 in vec3 world_normal;  
 in vec3 world_position;  
+in vec2 texcoords;
   
+uniform sampler2D diffuse_sampler;
 uniform vec3 lightPos; 
 uniform vec3 viewPos; //viewPos is the camer
 uniform vec3 lightColor;
@@ -27,6 +29,7 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), time);
     vec3 specular = specularStrength * spec * lightColor;  
         
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    // vec3 result = (ambient + diffuse + specular) * objectColor;  // white
+	vec3 result = (ambient + diffuse + specular) * texture(diffuse_sampler, texcoords).rgb;
     FragColor = vec4(result, 1.0);
 } 

@@ -18,40 +18,18 @@ float last_x;
 float last_y;
 Camera cam(camera_pos, glm::vec3(0, 0, 0));
 glm::vec3 lightPos(1, 3, 2);
-void Process_Input(GLFWwindow* window, float delta_time )
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(window, true);
-	}
-	if (glfwGetKey(window, GLFW_KEY_A))
-	{
-		cam.Process_camera(LEFT, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_D))
-	{
-		cam.Process_camera(RIGHT, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_W))
-	{
-		cam.Process_camera(FRONT, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S))
-	{
-		cam.Process_camera(BACK, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE)) {
-		cam.Process_camera(UP, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_M)) {
-		cam.Process_camera(DOWN, delta_time);
-	}
-	if (glfwGetKey(window, GLFW_KEY_B)) {
-		cam.return_to_initial();
-	}
 
-
+void Process_Input(GLFWwindow* window, float delta_time) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
+	if (glfwGetKey(window, GLFW_KEY_A)) { cam.Process_camera(LEFT, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_D)) { cam.Process_camera(RIGHT, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_W)) { cam.Process_camera(FRONT, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_S)) { cam.Process_camera(BACK, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_E)) { cam.Process_camera(UP, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_Q)) { cam.Process_camera(DOWN, delta_time); }
+	if (glfwGetKey(window, GLFW_KEY_B)) { cam.return_to_initial(); }
 }
+
 void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 {
 	float x = (float)xPos;
@@ -71,7 +49,11 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 
 int main() {
 	Show_Window opengl_window(800, 600, name);
+<<<<<<< HEAD
 	Shader shaderProgram("src\\blin.vs", "src\\blin.fs");
+=======
+	Shader shaderProgram("..\\shader\\blin.vs", "..\\shader\\blin.fs");
+>>>>>>> 0728f15b6dddcf7e2ae838477d84b180e1e49895
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);
@@ -98,6 +80,8 @@ int main() {
 		shaderProgram.setVec3("viewPos", camera_pos);
 		shaderProgram.setVec3("lightColor",glm::vec3(1,1,1));
 		shaderProgram.setVec3("objectColor", glm::vec3(1, 1, 1));
+		// set sampler2D
+		shaderProgram.setInt("diffuse_sampler", 0); // texture unit 0
 		float delta_time = glfwGetTime() - current_frame_time;
 		int  num = 100;
 		for (int i = 0; i < num; i++) {
