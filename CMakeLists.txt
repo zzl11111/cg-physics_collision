@@ -35,6 +35,8 @@ add_library(libmain
     src/sphere.cpp
     src/contact.cpp
     src/body.cpp
+    src/bound.cpp
+src/collision_pair.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain

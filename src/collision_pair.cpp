@@ -47,6 +47,7 @@ void SortBodiesBounds(const std::vector<Body> &bodies, const int num,
     body_max.id = i;
     body_max.value = dot(axis, bounds.maxs);
     body_max.is_min = false;
+     sorted_bodys_t.push_back(body_max);
   }
   std::sort(sorted_bodys_t.begin(), sorted_bodys_t.end(), Compare_SAP);
 }
@@ -55,7 +56,9 @@ void SweepAndPrune1D(const std::vector<Body>&bodies,const int num,std::vector<Co
 SortBodiesBounds(bodies,  num, bodys_t,  dt);
 Build_Pairs(pairs,bodys_t,num);
 }
-void BroadPhase(const std::vector<Body>&bodies,const int num,std::vector<CollisionPair_t>&pairs,float dt ){
+
+void BroadPhase(const std::vector<Body> &bodies, const int num,
+                std::vector<CollisionPair_t> &pairs, float dt){
 pairs.clear();
 SweepAndPrune1D(bodies,num,pairs,dt);
 }

@@ -53,6 +53,9 @@ public:
 
 class Body {
 public:
+Body(){
+	
+}
 	Body(Model *_shape, glm::vec3 position,
 		glm::vec3 velocity = glm::vec3(0, 0, 0),
 		glm::quat rotation = glm::quat(1, 0, 0, 0),

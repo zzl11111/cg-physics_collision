@@ -98,7 +98,6 @@ bool Ray_Sphere_Collision(Ray &r, const glm::vec3 &sphere_Center,
 						  float &t_out) {
 	glm::vec3 OR = sphere_Center - r.origin;
 	float a = dot(r.dir, r.dir);
-
 	float b = dot(OR, r.dir);
 	float c = dot(OR, OR) - Sphere_radius * Sphere_radius;
 	float delta = b * b - a * c;
@@ -130,6 +129,7 @@ bool Sphere_Sphere_Dynamic(const Sphere *sphereA, const Sphere *sphereB,
     if (glm::length(p_a_b) > radius) {
       return false;
     }
+    return false;
   } else if (!Ray_Sphere_Collision(r, position_B,
                                    sphereA->radius + sphereB->radius, t0, t1)) {
     return false;
@@ -152,4 +152,18 @@ bool Sphere_Sphere_Dynamic(const Sphere *sphereA, const Sphere *sphereB,
   A_potential_collision_point_world_space = newP_A + normal * sphereA->radius;
   B_potential_collision_point_world_space = newP_B - normal * sphereB->radius;
   return true;
+}
+
+Bounds Sphere::getBounds(const glm::vec3 & pos, const glm::quat & orient) const {
+	Bounds bounds;
+	bounds.mins = pos - glm::vec3(radius, radius, radius);
+	bounds.maxs = pos + glm::vec3(radius, radius, radius);
+	return bounds;
+}
+
+Bounds Sphere::getBounds() const {
+	Bounds bounds;
+	bounds.mins = glm::vec3(-radius);
+	bounds.maxs = glm::vec3(radius);
+	return bounds;
 }
