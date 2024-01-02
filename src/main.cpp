@@ -49,7 +49,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 
 int main() {
 	Show_Window opengl_window(800, 600, name);
-	Shader shaderProgram("..\\shader\\blin.vs", "..\\shader\\blin.fs");
+	Shader shaderProgram("shader\\blin.vs", "shader\\blin.fs");
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);
@@ -81,7 +81,7 @@ int main() {
 		float delta_time = glfwGetTime() - current_frame_time;
 		int  num = 100;
 		for (int i = 0; i < num; i++) {
-			sphere_scene.Update(delta_time);
+			sphere_scene.Update(10*delta_time);
 		}
 		sphere_scene.Draw(shaderProgram);
 		Process_Input(window,delta_time);

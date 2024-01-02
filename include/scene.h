@@ -7,7 +7,7 @@
 #include "shader_program.h"
 #include "sphere.h"
 #include "utility.h"
-
+#include <algorithm>
 glm::vec3 gravity(0, -10.0, 0);
 inline bool check_collision(Body &body1, Body &body2, Contact &contact,
                             float dt) {
@@ -139,13 +139,13 @@ public:
   Scene() { Create_Scene(); }
   void Create_Scene() {
     int num_objs = 1;
-    Body obj(new Sphere(2), glm::vec3(0, 2, 0), glm::vec3(1, 0, 0),
+    Body obj(new Sphere(2), glm::vec3(-1, 0, 0), glm::vec3(100, 0, 0),
              glm::quat(1, 0, 0, 0), 1.0);
     obj.elasticity = 0.9;
     obj.m_friction = 1.1;
     objs.push_back(obj);
-    Body obj2(new Sphere(2), glm::vec3(1, 3, 0), glm::vec3(0.2, 0, 0),
-              glm::quat(1, 0, 0, 0), 1.0);
+    Body obj2(new Sphere(2), glm::vec3(1, 0, 0), glm::vec3(0, 0, 0),
+              glm::quat(1, 0, 0, 0),0.0f);
     obj2.elasticity = 0.9;
     obj2.m_friction = 1.0;
     objs.push_back(obj2);
@@ -158,22 +158,55 @@ public:
   }
   void Update(float delta_time) {
     for (int i = 0; i < objs.size(); i++) {
-      if (objs[i].m_inv_mass == 0)
-        continue; // not move
+      Body &body = objs[i];
+      if (body.m_inv_mass == 0) {
+        continue;
+      }
+      glm::vec3 impulse_gravity =
+          gravity * (1.0f / body.m_inv_mass) * delta_time;
+      body.Process_Linear_Impulse(impulse_gravity);
+      // process the gravity
+    }
+    int num_Contacts = 0;
+    std::vector<Contact> contacts;
+    for (int i = 0; i < objs.size(); i++) {
       bool collision = false;
       for (int j = i + 1; j < objs.size(); j++) {
+        Body &body1 = objs[i];
+        Body &body2 = objs[2];
+        if (body1.m_inv_mass == 0.0f && body2.m_inv_mass == 0.0f) {
+          continue;
+        }
         Contact contact;
         collision = check_collision(objs[i], objs[j], contact, delta_time);
         if (collision) {
+          contacts.push_back(contact);
           Process_collision(contact);
-        } else {
-          glm::vec3 impulse = 1.0f / objs[i].m_inv_mass * gravity * delta_time;
-          objs[i].Process_Linear_Impulse(impulse);
         }
       }
     }
+    if(contacts.size()>1){
+      std::sort(contacts.begin(),contacts.end(),CompareContacts);
+    }
+    float accumulated_Time=0.0f;
+    for(auto &contact:contacts ){
+      float dt=contact.time_of_impact-accumulated_Time;
+      Body *A=contact.A;
+      Body *B=contact.B;
+      if (A->m_inv_mass == 0.0f && B->m_inv_mass == 0.0f) {
+          continue;//not resolve
+        }
+        for(int j=0;j<objs.size();j++){
+          objs[j].Update(dt);
+        }
+        Process_collision(contact);
+        accumulated_Time+=dt;
+    }
+    float timeRemaining=delta_time-accumulated_Time;
+    if(timeRemaining>0.0f){
     for (auto &obj : objs) {
-      obj.Update(delta_time);
+      obj.Update(timeRemaining);
+    }
     }
   }
   void Draw(const Shader &shader_prog) {

@@ -15,5 +15,5 @@ public:
 
 	glm::vec3 normal;
 };
-inline bool CompareContacts(const Contact *contact1,const Contact *contact2);
+ bool CompareContacts(const Contact &contact1,const Contact &contact2);
  

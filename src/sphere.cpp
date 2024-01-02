@@ -83,7 +83,7 @@ void Sphere::setup_Mesh() {
 	}
 
 	// set texture
-	mesh.texture_id = load_texture("..\\resources\\container2.png");
+	mesh.texture_id = load_texture("resources\\container2.png");
 }
 
 glm::mat3 Sphere::get_Ineritial_mat3(float mass) const {
