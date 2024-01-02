@@ -45,11 +45,7 @@ inline bool check_collision(Body &body1, Body &body2, Contact &contact,
                               contact.B_potential_collision_point_world_space,
                               contact.time_of_impact)) {
       // the collision happen in time_of_impact;
-<<<<<<< HEAD
-      contact.normal = glm::normalize(body2.m_position - body2.m_position);
-=======
       contact.normal = glm::normalize(body2.m_position - body1.m_position);
->>>>>>> 4de40939ac534abd9fe7c1f40733ee98161a7f94
       body1.Update(contact.time_of_impact);
       body2.Update(contact.time_of_impact);
       contact.A_potential_collision_point_local_space =

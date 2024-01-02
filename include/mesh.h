@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 #pragma once
 
 #include <glad/glad.h>
@@ -62,4 +60,3 @@ public:
   }
   unsigned int Get_VAO() { return VAO; }
 };
->>>>>>> 4de40939ac534abd9fe7c1f40733ee98161a7f94
