@@ -13,7 +13,6 @@
 
 
 inline bool check_collision(Body &body1, Body &body2, Contact &contact, float dt);
-
 inline void Process_collision(Contact &contact);
 
 class Scene {
@@ -25,6 +24,7 @@ public:
 
 private:
   std::vector<Body> objs;
+  glm::vec3 gravity = glm::vec3(0, -9.8, 0);
 };
 
 inline bool check_collision(Body &body1, Body &body2, Contact &contact, float dt) {
