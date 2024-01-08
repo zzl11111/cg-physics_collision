@@ -13,7 +13,8 @@ void Scene::Create_Scene() {
         float xx = float(x - 1) * radius * 2.0f;
         float yy = float(y - 1) * radius * 2.0f;
 		obj.m_position = glm::vec3(xx, 1.5f, yy);
-		obj.m_linear_velocity = glm::vec3(0,0,0);
+		obj.m_linear_velocity = glm::vec3(0, 0, 0);
+		obj.m_angular_velocity = glm::vec3(0, 0, 0);
 		obj.m_inv_mass = 1.0f;
 		obj.elasticity = 0.5f;
 		obj.m_friction = 0.5f;
