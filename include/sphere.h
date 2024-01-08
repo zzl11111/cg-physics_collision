@@ -22,6 +22,11 @@ public:
 	}
 	virtual void Draw() { mesh.Draw(); }
 	void setup_Mesh();
+	// this function gives us the farest point on the particular direction
+	glm::vec3 support(const glm::vec3 & dir, const glm::vec3 & pos, const glm::quat & orient, const float bias) const override;
+	// fastestLinearSpeed only useful for those convex shape, so we did not implement it here
+
+public:
 	float radius;
 };
 
