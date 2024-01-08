@@ -36,8 +36,8 @@ void SortBodiesBounds(const std::vector<Body> &bodies, const int num,
     Bounds bounds = body.shape->getBounds(body.m_position, body.m_rotation);
     bounds.expand(bounds.mins + body.m_linear_velocity * dt);
     bounds.expand(bounds.maxs + body.m_linear_velocity * dt);
-    bounds.expand(bounds.mins + axis * epsilon);
-    bounds.expand(bounds.maxs + axis * epsilon);
+    bounds.expand(bounds.mins - axis * epsilon*1e4f);
+    bounds.expand(bounds.maxs + axis * epsilon*1e4f);
     Body_t body_min;
     body_min.id = i;
     body_min.value = dot(axis, bounds.mins);

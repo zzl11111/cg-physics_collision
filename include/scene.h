@@ -1,6 +1,7 @@
 #pragma once
 
 #include "body.h"
+#include "collision_pair.h"
 #include "contact.h"
 #include "ray.h"
 #include "scene.h"
@@ -8,7 +9,7 @@
 #include "sphere.h"
 #include "utility.h"
 #include <algorithm>
-#include "collision_pair.h"
+
 glm::vec3 gravity(0, -10.0, 0);
 inline bool check_collision(Body &body1, Body &body2, Contact &contact,
                             float dt) {
@@ -127,13 +128,13 @@ inline void Process_collision(Contact &contact) {
   B->Process_Impulse(contact.B_potential_collision_point_world_space,
                      impulse_Friction);
   // std::cout << A->m_linear_velocity << B->m_linear_velocity;
-  if(0.0f==contact.time_of_impact){
-  float tA = A->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
-  float tB = B->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
-  glm::vec3 ds = contact.B_potential_collision_point_world_space -
-                 contact.A_potential_collision_point_world_space;
-  A->m_position += ds * tA;
-  B->m_position -= ds * tB; // push the A and B to outside
+  if (0.0f == contact.time_of_impact) {
+    float tA = A->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
+    float tB = B->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
+    glm::vec3 ds = contact.B_potential_collision_point_world_space -
+                   contact.A_potential_collision_point_world_space;
+    A->m_position += ds * tA;
+    B->m_position -= ds * tB; // push the A and B to outside
   }
 }
 
@@ -142,25 +143,23 @@ public:
   Scene() { Create_Scene(); }
   void Create_Scene() {
     int num_objs = 1;
-    for(int x=0;x<6;x++){
-      for(int y=0;y<6;y++){
-        
-        float radius=2.0f;
+    for (int x = 0; x < 6; x++) {
+      for (int y = 0; y < 6; y++) {
+
+        float radius = 2.0f;
         Body obj;
-  obj.shape=new Sphere(radius);
+        obj.shape = new Sphere(radius);
 
-        float xx=float(x-1)*radius*2.0f;
-        float yy=float(y-1)*radius*2.0f;
-obj.m_position=glm::vec3(xx,1.5f,yy);
+        float xx = float(x - 1) * radius * 2.0f;
+        float yy = float(y - 1) * radius * 2.0f;
+        obj.m_position = glm::vec3(xx, 1.1f, yy);
 
-obj.m_linear_velocity=glm::vec3(0,0,0);
-obj.m_inv_mass=1.0f;
-obj.elasticity=0.5f;
-obj.m_friction=0.5f;
-obj.m_rotation=glm::quat(1,0,0,0);
-objs.push_back(obj);
-
-
+        obj.m_linear_velocity = glm::vec3(0, 0, 0);
+        obj.m_inv_mass = 1.0f;
+        obj.elasticity = 0.5f;
+        obj.m_friction = 0.5f;
+        obj.m_rotation = glm::quat(1, 0, 0, 0);
+        objs.push_back(obj);
       }
     }
     Body ground(new Sphere(10000), glm::vec3(0, -10003, 0), glm::vec3(0, 0, 0),
@@ -182,26 +181,26 @@ objs.push_back(obj);
       // process the gravity
     }
     std::vector<CollisionPair_t> collisionPairs;
-    BroadPhase(objs,objs.size(),collisionPairs,delta_time);
+    BroadPhase(objs, objs.size(), collisionPairs, delta_time);
     int num_Contacts = 0;
     std::vector<Contact> contacts;
-for(auto &pair:collisionPairs){
-  auto &body1=objs[pair.a];
-  auto &body2=objs[pair.b];
-  if(body1.m_inv_mass==0&&body2.m_inv_mass==0){
-continue;//find next pair
-  }
-  Contact contact;
-  bool collision=check_collision(body1,body2,contact,delta_time);
-  if(collision){
-    contacts.push_back(contact);
-  }
-}
+    for (auto &pair : collisionPairs) {
+      auto &body1 = objs[pair.a];
+      auto &body2 = objs[pair.b];
+      if (body1.m_inv_mass == 0 && body2.m_inv_mass == 0) {
+        continue; // find next pair
+      }
+      Contact contact;
+      bool collision = check_collision(body1, body2, contact, delta_time);
+      if (collision) {
+        contacts.push_back(contact);
+      }
+    }
     // for (int i = 0; i < objs.size(); i++) {
     //   bool collision = false;
     //   for (int j = i + 1; j < objs.size(); j++) {
     //     Body &body1 = objs[i];
-    //     Body &body2 = objs[2];
+    //     Body &body2 = objs[j];
     //     if (body1.m_inv_mass == 0.0f && body2.m_inv_mass == 0.0f) {
     //       continue;
     //     }
@@ -212,28 +211,28 @@ continue;//find next pair
     //     }
     //   }
     // }
-    if(contacts.size()>1){
-      std::sort(contacts.begin(),contacts.end(),CompareContacts);
+    if (contacts.size() > 1) {
+      std::sort(contacts.begin(), contacts.end(), CompareContacts);
     }
-    float accumulated_Time=0.0f;
-    for(auto &contact:contacts ){
-      float dt=contact.time_of_impact-accumulated_Time;
-      Body *A=contact.A;
-      Body *B=contact.B;
+    float accumulated_Time = 0.0f;
+    for (auto &contact : contacts) {
+      float dt = contact.time_of_impact - accumulated_Time;
+      Body *A = contact.A;
+      Body *B = contact.B;
       if (A->m_inv_mass == 0.0f && B->m_inv_mass == 0.0f) {
-          continue;//not resolve
-        }
-        for(int j=0;j<objs.size();j++){
-          objs[j].Update(dt);
-        }
-        Process_collision(contact);
-        accumulated_Time+=dt;
+        continue; // not resolve
+      }
+      for (int j = 0; j < objs.size(); j++) {
+        objs[j].Update(dt);
+      }
+      Process_collision(contact);
+      accumulated_Time += dt;
     }
-    float timeRemaining=delta_time-accumulated_Time;
-    if(timeRemaining>0.0f){
-    for (auto &obj : objs) {
-      obj.Update(timeRemaining);
-    }
+    float timeRemaining = delta_time - accumulated_Time;
+    if (timeRemaining > 0.0f) {
+      for (auto &obj : objs) {
+        obj.Update(timeRemaining);
+      }
     }
   }
   void Draw(const Shader &shader_prog) {
