@@ -10,16 +10,16 @@ const float stackstep = 3.1415 / stack_count;
 
 class Sphere : public Model {
 public:
-	virtual unsigned int Get_Type() const { return SPHERE; }
-	unsigned int load_texture( const char * path);
-	virtual glm::mat3 get_Ineritial_mat3(float mass) const;
-	Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const override;
-	Bounds getBounds() const override;
 	Sphere(float _radius) : radius(_radius) {
 		mass_center = glm::vec3(0, 0, 0);
 		setup_Mesh();
 		mesh.Set_VAO();
 	}
+	virtual unsigned int Get_Type() const { return SPHERE; }
+	unsigned int load_texture( const char * path);
+	virtual glm::mat3 get_Ineritial_mat3(float mass) const;
+	Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const override;
+	Bounds getBounds() const override;
 	virtual void Draw() { mesh.Draw(); }
 	void setup_Mesh();
 	// this function gives us the farest point on the particular direction
