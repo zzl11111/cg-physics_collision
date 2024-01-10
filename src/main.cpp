@@ -74,14 +74,14 @@ int main() {
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setVec3("lightPos", lightPos);
 		shaderProgram.setVec3("viewPos", camera_pos);
-		shaderProgram.setVec3("lightColor",glm::vec3(1,1,1));
+		shaderProgram.setVec3("lightColor",glm::vec3(2,2,2));
 		shaderProgram.setVec3("objectColor", glm::vec3(1, 1, 1));
 		// set sampler2D
 		shaderProgram.setInt("diffuse_sampler", 0); // texture unit 0
 		float delta_time = glfwGetTime() - current_frame_time;
 		int  num = 100;
 		for (int i = 0; i < num; i++) {
-			sphere_scene.Update(10*delta_time);
+			sphere_scene.Update(delta_time);
 		}
 		sphere_scene.Draw(shaderProgram);
 		Process_Input(window,delta_time);

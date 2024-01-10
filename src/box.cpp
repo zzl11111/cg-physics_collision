@@ -1,4 +1,170 @@
 #include "box.h"
+// constructor function
+Box::Box(Bounds bounds) : Box(bounds.mins, bounds.maxs) {}
+Box::Box(glm::vec3 a, glm::vec3 b) {
+  glm::vec3 mins, maxs;
+  for (int i = 0; i < 3; i++) {
+    mins[i] = std::min(a[i], b[i]);
+    maxs[i] = std::max(a[i], b[i]);
+  }
+  m_bounds.mins = mins;
+  m_bounds.maxs = maxs;
+  m_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.maxs.y, m_bounds.mins.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.maxs.y, m_bounds.maxs.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.maxs.y, m_bounds.maxs.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.maxs.y, m_bounds.mins.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.mins.y, m_bounds.mins.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.mins.y, m_bounds.maxs.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.mins.y, m_bounds.maxs.z));
+  m_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.mins.y, m_bounds.mins.z));
+  setUpMesh();
+  mesh.Set_VAO();
+}
+
+void Box::setUpMesh() {
+glm::vec3 up_normal(0, 1, 0);
+  Vertex vertex;
+  vertex.position = m_points[0];
+  vertex.normal = up_normal;
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[1];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[2];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[3];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(0);
+  mesh.indices.push_back(1);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(3);
+  mesh.indices.push_back(0);
+  // down
+  vertex.position = m_points[4];
+  vertex.normal = -up_normal;
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[5];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[6];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[7];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(4);
+  mesh.indices.push_back(5);
+  mesh.indices.push_back(6);
+  mesh.indices.push_back(6);
+  mesh.indices.push_back(7);
+  mesh.indices.push_back(4);
+  // left
+  glm::vec3 left_normal(-1, 0, 0);
+  vertex.normal = left_normal;
+  vertex.position = m_points[0];
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[4];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[5];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[1];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(8);
+  mesh.indices.push_back(9);
+  mesh.indices.push_back(10);
+  mesh.indices.push_back(10);
+  mesh.indices.push_back(11);
+  mesh.indices.push_back(8);
+  // right
+  vertex.normal = -left_normal;
+  vertex.position = m_points[3];
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[7];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[6];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[2];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(12);
+  mesh.indices.push_back(13);
+  mesh.indices.push_back(14);
+  mesh.indices.push_back(14);
+  mesh.indices.push_back(15);
+  mesh.indices.push_back(12);
+  // forward
+  glm::vec3 forward_normal(0, 0, 1);
+  vertex.normal = forward_normal;
+  vertex.position = m_points[1];
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[5];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[6];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[2];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(16);
+  mesh.indices.push_back(17);
+  mesh.indices.push_back(18);
+  mesh.indices.push_back(18);
+  mesh.indices.push_back(19);
+  mesh.indices.push_back(16);
+  // backward
+  // forward
+  vertex.normal = -forward_normal;
+  vertex.position = m_points[0];
+  vertex.texcoords = {0.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[4];
+  vertex.texcoords = {1.0f, 0.0f};
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[7];
+  vertex.texcoords = {1.0f, 1.0f};
+
+  mesh.vertices.push_back(vertex);
+  vertex.position = m_points[3];
+  vertex.texcoords = {0.0f, 1.0f};
+  mesh.vertices.push_back(vertex);
+  mesh.indices.push_back(20);
+  mesh.indices.push_back(21);
+  mesh.indices.push_back(22);
+  mesh.indices.push_back(22);
+  mesh.indices.push_back(23);
+  mesh.indices.push_back(20);
+  mesh.texture_id = load_texture("resources\\container2.png");
+  mass_center = (m_bounds.mins + m_bounds.maxs) / 2.0f;
+
+
+}
 
 // set up bounds and points
 void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
@@ -71,7 +237,7 @@ void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
   // left
   glm::vec3 left_normal(-1, 0, 0);
   vertex.normal = left_normal;
-  vertex.position=m_points[0];
+  vertex.position = m_points[0];
   vertex.texcoords = {0.0f, 0.0f};
   mesh.vertices.push_back(vertex);
   vertex.position = m_points[4];
@@ -90,9 +256,9 @@ void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
   mesh.indices.push_back(10);
   mesh.indices.push_back(11);
   mesh.indices.push_back(8);
-  //right
+  // right
   vertex.normal = -left_normal;
-  vertex.position=m_points[3];
+  vertex.position = m_points[3];
   vertex.texcoords = {0.0f, 0.0f};
   mesh.vertices.push_back(vertex);
   vertex.position = m_points[7];
@@ -111,10 +277,10 @@ void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
   mesh.indices.push_back(14);
   mesh.indices.push_back(15);
   mesh.indices.push_back(12);
-  //forward
-	glm::vec3 forward_normal(0,0,1);
+  // forward
+  glm::vec3 forward_normal(0, 0, 1);
   vertex.normal = forward_normal;
-  vertex.position=m_points[1];
+  vertex.position = m_points[1];
   vertex.texcoords = {0.0f, 0.0f};
   mesh.vertices.push_back(vertex);
   vertex.position = m_points[5];
@@ -133,10 +299,10 @@ void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
   mesh.indices.push_back(18);
   mesh.indices.push_back(19);
   mesh.indices.push_back(16);
-  //backward
-    //forward
-  vertex.normal =-forward_normal;
-  vertex.position=m_points[0];
+  // backward
+  // forward
+  vertex.normal = -forward_normal;
+  vertex.position = m_points[0];
   vertex.texcoords = {0.0f, 0.0f};
   mesh.vertices.push_back(vertex);
   vertex.position = m_points[4];
@@ -148,14 +314,14 @@ void Box::setUpMesh(const std::vector<glm::vec3> &pts, const int num) {
   mesh.vertices.push_back(vertex);
   vertex.position = m_points[3];
   vertex.texcoords = {0.0f, 1.0f};
-    mesh.vertices.push_back(vertex);
+  mesh.vertices.push_back(vertex);
   mesh.indices.push_back(20);
   mesh.indices.push_back(21);
   mesh.indices.push_back(22);
   mesh.indices.push_back(22);
   mesh.indices.push_back(23);
   mesh.indices.push_back(20);
-  mesh.texture_id=load_texture("resources\\container2.png");
+  mesh.texture_id = load_texture("resources\\container2.png");
   mass_center = (m_bounds.mins + m_bounds.maxs) / 2.0f;
 }
 
