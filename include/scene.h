@@ -10,7 +10,7 @@
 #include "utility.h"
 #include <algorithm>
 #include "collision_pair.h"
-
+#include "box.h"
 
 
 inline bool check_collision(Body &body1, Body &body2, Contact &contact, float dt);

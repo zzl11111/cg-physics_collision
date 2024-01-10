@@ -2,24 +2,57 @@
 
 
 void Scene::Create_Scene() {
-    for (int x = 0; x < 6; x++) {
-      for (int y = 0; y < 6; y++) {
-        float radius = 2.0f;
-        Body obj;
-  		obj.shape = new Sphere(radius);
+    // for (int x = 0; x < 6; x++) {
+    //   for (int y = 0; y < 6; y++) {
+    //     float radius = 2.0f;
+    //     Body obj;
+  	// 	obj.shape = new Sphere(radius);
 
-        float xx = float(x - 1) * radius * 2.0f;
-        float yy = float(y - 1) * radius * 2.0f;
-		obj.m_position = glm::vec3(xx, 2.0f, yy);
-		obj.m_linear_velocity = glm::vec3(0, 0, 0);
-		obj.m_angular_velocity = glm::vec3(0, 0, 0);
-		obj.m_inv_mass = 1.0f;
-		obj.elasticity = 1.1f;
-		obj.m_friction = 0.5f;
-		obj.m_rotation = glm::quat(1,0,0,0);
-		objs.push_back(obj);
-      }
-    }
+    //     float xx = float(x - 1) * radius * 2.0f;
+    //     float yy = float(y - 1) * radius * 2.0f;
+	// 	obj.m_position = glm::vec3(xx, 2.0f, yy);
+	// 	obj.m_linear_velocity = glm::vec3(0, 0, 0);
+	// 	obj.m_angular_velocity = glm::vec3(0, 0, 0);
+	// 	obj.m_inv_mass = 1.0f;
+	// 	obj.elasticity = 1.1f;
+	// 	obj.m_friction = 0.5f;
+	// 	obj.m_rotation = glm::quat(1,0,0,0);
+	// 	objs.push_back(obj);
+    //   }
+    // }
+	Body box;
+	box.m_position=glm::vec3(0,1,10);
+			box.m_linear_velocity = glm::vec3(0, 0, 0);
+		box.m_angular_velocity = glm::vec3(0, 0, 0);
+		box.m_inv_mass =0.0f;
+		box.elasticity = 1.1f;
+		box.m_friction = 0.5f;
+		box.m_rotation = glm::quat(1,0,0,0);
+	std::vector<glm::vec3> box_points;
+	glm::vec3 mins(-1,0,-3);
+	glm::vec3 maxs(0,1,1);
+	Bounds m_bounds;
+	m_bounds.mins=mins;
+	m_bounds.maxs=maxs;
+	box_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.maxs.y, m_bounds.mins.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.maxs.y, m_bounds.maxs.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.maxs.y, m_bounds.maxs.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.maxs.y, m_bounds.mins.z));
+
+  box_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.mins.y, m_bounds.mins.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.mins.x, m_bounds.mins.y, m_bounds.maxs.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.mins.y, m_bounds.maxs.z));
+  box_points.push_back(
+      glm::vec3(m_bounds.maxs.x, m_bounds.mins.y, m_bounds.mins.z));
+box.shape=new Box(box_points,8);
+objs.push_back(box);
     Body ground(new Sphere(1000), glm::vec3(0, -1003, 0), glm::vec3(0, 0, 0),
                 glm::quat(1, 0, 0, 0), 0);
     ground.elasticity = 0.9f;

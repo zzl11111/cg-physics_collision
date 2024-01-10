@@ -51,7 +51,7 @@ public:
 	// use the following two functions to detect collision between convex shapes
 	virtual glm::vec3 support(const glm::vec3 & dir, const glm::vec3 & pos, const glm::quat & orient, const float bias) const = 0;
 	virtual float fastestLinearSpeed(const glm::vec3 & angularVelocity, const glm::vec3 & dir) const { return 0.0f; }
-
+	unsigned int load_texture(const char *path);
 public:
 	glm::vec3 mass_center;
 	Mesh mesh;

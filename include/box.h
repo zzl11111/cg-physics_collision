@@ -4,10 +4,12 @@
 
 class Box : public Model {
 public:
-	Box(const glm::vec3 * pts, const int num) {
+	Box(const std::vector<glm::vec3> & pts, const int num) {
 		setUpMesh(pts, num);
+		mass_center=glm::vec3(0,0,0);
+		mesh.Set_VAO();
 	}
-	void setUpMesh(const glm::vec3 * pts, const int num); 
+	void setUpMesh(const std::vector<glm::vec3> & pts, const int num); 
 	glm::vec3 support(const glm::vec3 & dir, const glm::vec3 & pos, const glm::quat & orient, const float bias) const override;
 	glm::mat3 get_Ineritial_mat3(float mass) const override;
 	Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const override;

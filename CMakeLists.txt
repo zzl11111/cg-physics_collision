@@ -38,6 +38,7 @@ add_library(libmain
     src/bound.cpp
 	src/collision_pair.cpp
 	src/scene.cpp
+    src/box.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain

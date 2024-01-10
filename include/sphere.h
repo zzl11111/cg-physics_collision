@@ -16,7 +16,6 @@ public:
 		mesh.Set_VAO();
 	}
 	virtual unsigned int Get_Type() const { return SPHERE; }
-	unsigned int load_texture( const char * path);
 	virtual glm::mat3 get_Ineritial_mat3(float mass) const;
 	Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const override;
 	Bounds getBounds() const override;
