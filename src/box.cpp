@@ -342,7 +342,7 @@ glm::mat3 Box::get_Ineritial_mat3(float mass) const {
   cm.z = (m_bounds.mins.z + m_bounds.maxs.z) / 2.0f;
 
   const glm::vec3 r = glm::vec3(0) - cm;
-  const float r2 = r.length();
+  const float r2 = glm::dot(r, r);
   glm::mat3 patTensor;
   patTensor[0] = glm::vec3(r2 - r.x * r.x, r.x * r.y, r.x * r.z);
   patTensor[1] = glm::vec3(r.y * r.x, r2 - r.y * r.y, r.y * r.z);
