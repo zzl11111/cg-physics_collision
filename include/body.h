@@ -12,6 +12,8 @@
 
 enum model_type {
   SPHERE = 0,
+  BOX = 1,
+  CONVEX = 2,
 };
 
 struct Vertex {
@@ -45,6 +47,10 @@ public:
 	virtual void Draw() = 0;
 	virtual Bounds getBounds(const glm::vec3 & pos, const glm::quat & orient) const = 0;
 	virtual Bounds getBounds() const = 0;
+	// virtual void build(const glm::vec3 * pts, const int num) = 0; // build the shape from points
+	// use the following two functions to detect collision between convex shapes
+	virtual glm::vec3 support(const glm::vec3 & dir, const glm::vec3 & pos, const glm::quat & orient, const float bias) const = 0;
+	virtual float fastestLinearSpeed(const glm::vec3 & angularVelocity, const glm::vec3 & dir) const { return 0.0f; }
 
 public:
 	glm::vec3 mass_center;

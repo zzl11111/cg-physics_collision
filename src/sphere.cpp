@@ -167,3 +167,8 @@ Bounds Sphere::getBounds() const {
 	bounds.maxs = glm::vec3(radius);
 	return bounds;
 }
+
+// we suppose the vec3 dir has been normalized
+glm::vec3 Sphere::support(const glm::vec3 & dir, const glm::vec3 & pos, const glm::quat & orient, const float bias) const {
+	return (pos + dir * (radius + bias));
+}

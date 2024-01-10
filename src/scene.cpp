@@ -1,8 +1,6 @@
 #include "scene.h"
 
 
-glm::vec3 gravity = glm::vec3(0, -9.8, 0);
-
 void Scene::Create_Scene() {
     for (int x = 0; x < 6; x++) {
       for (int y = 0; y < 6; y++) {
