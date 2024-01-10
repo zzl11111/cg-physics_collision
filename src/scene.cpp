@@ -18,7 +18,7 @@ void Scene::Create_Scene() {
   // 	obj.m_rotation = glm::quat(1,0,0,0);
   // 	objs.push_back(obj);
   //   }
-  // }
+  // }massive_sphere
   Body box;
   box.m_position = glm::vec3(0, 1, 10);
   box.m_linear_velocity = glm::vec3(0, 0, 0);
@@ -34,6 +34,7 @@ void Scene::Create_Scene() {
   m_bounds.mins = mins;
   m_bounds.maxs = maxs;
   box.shape = new Box(mins,maxs );
+  //test for box
   objs.push_back(box);
   Body ground(new Sphere(1000), glm::vec3(0, -1003, 0), glm::vec3(0, 0, 0),
               glm::quat(1, 0, 0, 0), 0);
