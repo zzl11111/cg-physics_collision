@@ -10,7 +10,7 @@
 
 constexpr const int width = 800;
 constexpr const int height = 600;
-std::string name = "aa";
+std::string name = "rigid body simulator";
 //WE use glm instead
 glm::vec3 camera_pos(2, 3, 30);
 bool is_first = false;

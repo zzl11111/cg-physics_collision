@@ -3,8 +3,8 @@
 #include "ray.h"
 #include "utility.h"
 
-const int sector_count = 540;
-const int stack_count = 540;
+const int sector_count = 40;
+const int stack_count = 40;
 const float sectorstep = 2 * 3.1415 / sector_count;
 const float stackstep = 3.1415 / stack_count;
 
