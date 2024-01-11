@@ -39,6 +39,7 @@ add_library(libmain
 	src/collision_pair.cpp
 	src/scene.cpp
     src/box.cpp
+    src/gjk.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain

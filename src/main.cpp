@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "scene.h"
 #include "utility.h"
-
+#include "gjk.h"
 constexpr const int width = 800;
 constexpr const int height = 600;
 std::string name = "rigid body simulator";
@@ -53,6 +53,7 @@ int main() {
 	Scene sphere_scene;
 	GLFWwindow* window = opengl_window.getWindow();
 	glEnable(GL_DEPTH_TEST);
+	//test();
 	//glfwSetCursorPosCallback(window, mouse_callback);
 	while (!glfwWindowShouldClose(window)) {
 		float current_frame_time = glfwGetTime();

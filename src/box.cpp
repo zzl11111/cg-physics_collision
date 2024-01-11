@@ -354,7 +354,7 @@ glm::mat3 Box::get_Ineritial_mat3(float mass) const {
 // return the vertex which is the farthest in the direction of dir
 glm::vec3 Box::support(const glm::vec3 &dir, const glm::vec3 &pos,
                        const glm::quat &orient, const float bias) const {
-  glm::vec3 maxPt = glm::vec3(0);
+  glm::vec3 maxPt = orient*m_points[0]+pos;
   float maxDist = -FLT_MAX;
   for (int i = 0; i < m_points.size(); i++) {
     // different with the book code, so bug may exist here

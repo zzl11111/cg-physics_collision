@@ -1,6 +1,7 @@
 #pragma once
 
 // #include <random>
+#include "glm/matrix.hpp"
 #include <assert.h>
 #include <cmath>
 #include <glm/glm.hpp>
@@ -12,7 +13,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 
 const float PI = 3.1415926f;
 const float epsilon = 1e-6;
@@ -60,7 +60,7 @@ inline std::ostream &operator<<(std::ostream &cout, glm::quat v) {
 inline std::ostream &operator<<(std::ostream &cout, glm::mat3 mat) {
   for (int j = 0; j < 3; j++) {
     for (int i = 0; i < 3; i++) {
-      cout << mat[i][j];
+      cout << mat[i][j]<<" ";
     }
     cout << std::endl;
   }
@@ -70,10 +70,39 @@ inline std::ostream &operator<<(std::ostream &cout, glm::mat3 mat) {
 inline std::ostream &operator<<(std::ostream &cout, glm::mat4 mat) {
   for (int j = 0; j < 4; j++) {
     for (int i = 0; i < 4; i++) {
-      cout << mat[i][j];
+      cout << mat[i][j]<<" ";
     }
     cout << std::endl;
   }
 
   return cout;
+}
+inline float get_Cofactor(const glm::mat4 &mat, int index_i, int index_j) {
+  glm::mat3 minor_mat=glm::mat3(0.0f);
+  for(int i=0;i<3;i++){
+    for(int j=0;j<3;j++){
+      minor_mat[i][j]=0;
+    }
+  }
+  int real_i = index_j, real_j = index_i;
+  for (int i = 0; i < 4; i++) 
+  {
+
+    for (int j = 0; j < 4; j++) 
+    {
+      if (j == real_j||i==real_i) {
+        continue; // skip this col
+      }
+      int stored_i = i, stored_j = j;
+      if (stored_i > real_i) {
+        stored_i -= 1;
+      }
+      if (stored_j > real_j) {
+        stored_j -= 1;
+      }
+      minor_mat[stored_i][stored_j] = mat[i][j];
+    }
+  
+  }
+    return std::pow(-1, index_i + index_j) * glm::determinant(minor_mat);
 }
