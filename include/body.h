@@ -9,22 +9,34 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
+
+struct Triangle_t {
+	int a, b, c;
+};
+
+struct Edge_t {
+	int a, b;
+	bool operator==(const Edge_t &rhs) const {
+		return (a == rhs.a && b == rhs.b) || (a == rhs.b && b == rhs.a);
+	}
+};
+
 class Point_t {
 public:
-  glm::vec3 xyz;
-  glm::vec3 point_A;
-  glm::vec3 point_B;
-  Point_t() : xyz(glm::vec3(0, 0, 0)), point_A(0, 0, 0), point_B(0, 0, 0) {}
- Point_t &operator=(const Point_t&rhs){
-xyz=rhs.xyz;
-point_A=rhs.point_A;
-point_B=rhs.point_B;
- }
-  bool operator==(const Point_t &rhs) const 
-  {
-    return (xyz == rhs.xyz) && (point_A == rhs.point_B) &&
-           (point_B == rhs.point_B);
-  }
+	glm::vec3 xyz;
+	glm::vec3 point_A;
+	glm::vec3 point_B;
+	Point_t() : xyz(glm::vec3(0, 0, 0)), point_A(0, 0, 0), point_B(0, 0, 0) {}
+	Point_t &operator=(const Point_t&rhs){
+		xyz=rhs.xyz;
+		point_A=rhs.point_A;
+		point_B=rhs.point_B;
+	}
+  	bool operator==(const Point_t &rhs) const 
+	{
+		return (xyz == rhs.xyz) && (point_A == rhs.point_B) &&
+			(point_B == rhs.point_B);
+	}
 };
 enum model_type {
   SPHERE = 0,
