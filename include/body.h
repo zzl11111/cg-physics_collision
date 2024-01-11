@@ -9,7 +9,18 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
-
+class Point_t {
+public:
+  glm::vec3 xyz;
+  glm::vec3 point_A;
+  glm::vec3 point_B;
+  Point_t() : xyz(glm::vec3(0, 0, 0)), point_A(0, 0, 0), point_B(0, 0, 0) {}
+  bool operator==(const Point_t &rhs) const 
+  {
+    return (xyz == rhs.xyz) && (point_A == rhs.point_B) &&
+           (point_B == rhs.point_B);
+  }
+};
 enum model_type {
   SPHERE = 0,
   BOX = 1,
