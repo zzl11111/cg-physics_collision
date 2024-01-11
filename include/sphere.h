@@ -41,7 +41,8 @@ bool Sphere_Sphere_Dynamic(
     glm::vec3 &B_potential_collision_point_world_space, 
 	float &time_of_impact
 );
-
+//check if collide happen quick method;
+bool Sphere_Sphere_Static(const Sphere *sphereA,const Sphere *sphere,const glm::vec3 &position_A,const glm::vec3 &position_B, glm::vec3 &ptA, glm::vec3 &pt_B);
 bool Ray_Sphere_Collision(
 	Ray &r, 
 	const glm::vec3 &sphere_Center,

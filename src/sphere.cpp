@@ -116,7 +116,20 @@ bool Sphere_Sphere_Dynamic(const Sphere *sphereA, const Sphere *sphereB,
   B_potential_collision_point_world_space = newP_B - normal * sphereB->radius;
   return true;
 }
-
+bool Sphere_Sphere_Static(const Sphere *sphereA,const Sphere *sphereB,const glm::vec3 &position_A,const glm::vec3 &position_B, glm::vec3 &pt_A, glm::vec3 &pt_B){
+	glm::vec3 ab=position_B-position_A;
+	glm::vec3 normal=ab;
+	if(glm::length(normal)!=0){
+		normal=glm::normalize(normal);
+	}
+pt_A=position_A+normal*sphereA->radius;
+pt_B=position_B-normal*sphereB->radius;
+float radius_AB=sphereA->radius+sphereB->radius;
+if(dot(ab,ab)<radius_AB*radius_AB){
+	return true;//collision happen
+}
+return false;
+}
 Bounds Sphere::getBounds(const glm::vec3 & pos, const glm::quat & orient) const {
 	Bounds bounds;
 	bounds.mins = pos - glm::vec3(radius, radius, radius);

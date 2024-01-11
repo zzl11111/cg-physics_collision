@@ -350,37 +350,36 @@ bool GJK_Intersect(const Body &bodyA, const Body &bodyB) {
 
   return ContainOrigin;
 }
-void GJK_Closest_Points(const Body &BodyA,const Body &BodyB,glm::vec3 &pt_A,glm::vec3 pt_B){
+void GJK_Closest_Points(const Body &BodyA, const Body &BodyB, glm::vec3 &pt_A,
+                        glm::vec3 pt_B) {
   glm::vec3 origin(0);
-  float closetDist=1e10f;
-  float bias=0.0f;
-  int numPts=1;
+  float closetDist = 1e10f;
+  float bias = 0.0f;
+  int numPts = 1;
   std::vector<Point_t> simplexPoints(4);
-  glm::vec3 dir(1,1,1);
-  simplexPoints[0]=get_support(BodyA,BodyB,dir,bias);
-  glm::vec4 lambdas(1,0,0,0);
-  glm::vec3 new_dir=simplexPoints[0].xyz*(-1.0f);
-  while(numPts<4){
-    Point_t new_Pt=get_support(BodyA,BodyB,new_dir,bias);
-    if(HasPoint(simplexPoints,new_Pt)){
+  glm::vec3 dir(1, 1, 1);
+  simplexPoints[0] = get_support(BodyA, BodyB, dir, bias);
+  glm::vec4 lambdas(1, 0, 0, 0);
+  glm::vec3 new_dir = simplexPoints[0].xyz * (-1.0f);
+  while (numPts < 4) {
+    Point_t new_Pt = get_support(BodyA, BodyB, new_dir, bias);
+    if (HasPoint(simplexPoints, new_Pt)) {
       break;
     }
-    simplexPoints[numPts]=new_Pt;
+    simplexPoints[numPts] = new_Pt;
     numPts++;
-    SimplexSignedVolumes(simplexPoints,  numPts,new_dir, lambdas);
-    numPts=NumValids(lambdas);
-    float dist=dot(new_dir,new_dir);
-    if(dist>=closetDist){
+    SimplexSignedVolumes(simplexPoints, numPts, new_dir, lambdas);
+    numPts = NumValids(lambdas);
+    float dist = dot(new_dir, new_dir);
+    if (dist >= closetDist) {
       break;
     }
-    closetDist=dist;
+    closetDist = dist;
   }
-pt_A=glm::vec3(0);
-pt_B=glm::vec3(0);
-for(int i=0;i<4;i++){
-  pt_A+=simplexPoints[i].point_A*lambdas[i];
-  pt_B+=simplexPoints[i].point_B*lambdas[i];
-}
-
-
+  pt_A = glm::vec3(0);
+  pt_B = glm::vec3(0);
+  for (int i = 0; i < 4; i++) {
+    pt_A += simplexPoints[i].point_A * lambdas[i];
+    pt_B += simplexPoints[i].point_B * lambdas[i];
+  }
 }

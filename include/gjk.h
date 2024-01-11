@@ -18,3 +18,4 @@ bool HasPoint(const std::vector<Point_t> &simplexPoints, const Point_t &new_pt);
 void SortValids(std::vector<Point_t> &simplexPoints, glm::vec4 &lambdas);
 int NumValids(const glm::vec4 &lambdas);
 bool GJK_Intersect(const Body &bodyA, const Body &bodyB);
+void GJK_Closest_Points(const Body &bodyA,const Body &bodyB,glm::vec3 &pt_A,glm::vec3 &pt_B);
