@@ -15,6 +15,11 @@ public:
   glm::vec3 point_A;
   glm::vec3 point_B;
   Point_t() : xyz(glm::vec3(0, 0, 0)), point_A(0, 0, 0), point_B(0, 0, 0) {}
+ Point_t &operator=(const Point_t&rhs){
+xyz=rhs.xyz;
+point_A=rhs.point_A;
+point_B=rhs.point_B;
+ }
   bool operator==(const Point_t &rhs) const 
   {
     return (xyz == rhs.xyz) && (point_A == rhs.point_B) &&
