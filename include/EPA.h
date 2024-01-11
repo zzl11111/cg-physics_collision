@@ -1,3 +1,4 @@
+#include "contact.h"
 #include "utility.h"
 #include "body.h"
 #include <vector>
@@ -20,3 +21,5 @@ void findDanglingEdges(std::vector<Edge_t> & danglingEdges, const std::vector<Tr
 float EPA_expand(const Body * bodyA, const Body * bodyB, const float bias, const Point_t simplexPoints[4], glm::vec3 & ptOnA, glm::vec3 & ptOnB);
 
 bool GJK_doesIntersect(const Body * bodyA, const Body * bodyB, const float bias, glm::vec3 & ptOnA, glm::vec3 & ptOnB);
+
+bool conservativeAdvance(Body * bodyA, Body * bodyB, float dt, Contact & contact);

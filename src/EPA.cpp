@@ -3,6 +3,7 @@
 #include "gjk.h"
 #include "glm/ext/vector_float3.hpp"
 #include "glm/geometric.hpp"
+#include <cmath>
 #include <vector>
 
 glm::vec3 barycentricCoordinates(glm::vec3 s1, glm::vec3 s2, glm::vec3 s3, const glm::vec3 &p) {
@@ -368,4 +369,55 @@ bool GJK_doesIntersect(const Body *bodyA, const Body *bodyB, const float bias, g
 	}
 
 	EPA_expand(bodyA, bodyB, bias, simplexPoints, ptOnA, ptOnB);
+}
+
+bool ConservativeAdvance(Body *bodyA, Body *bodyB, float dt, Contact &contact) {
+	contact.A = bodyA;
+	contact.B = bodyB;
+	
+	float toi = 0.0f;
+
+	int numberOfIterations = 0;
+
+	// Advance the positions of the bodies untill they touch or there is not time left
+	while (dt > 0.0f) {
+		// Check for intersection
+		bool didIntersect = Intersect(bodyA, bodyB, contact);
+		if (didIntersect) {
+			contact.time_of_impact = toi;
+			bodyA->Update(-toi);
+			bodyB->Update(-toi);
+			return true;
+		}
+
+		numberOfIterations++;
+		if (numberOfIterations > 10) { break; }
+
+		// Get the vector from the closest point on A to the closest point on B
+		glm::vec3 ab = contact.B_potential_collision_point_world_space - contact.A_potential_collision_point_world_space;
+		glm::normalize(ab);
+
+		// project the relative velocity onto the ray of shortest distance
+		glm::vec3 relativeVelocity = bodyA->m_linear_velocity - bodyB->m_linear_velocity;
+		float orthoSpeed = dot(relativeVelocity, ab);
+
+		// Add to the orthoSpeed the maximum angular speeds of the relative shapes
+		float angularSpeedA = bodyA->shape->fastestLinearSpeed(bodyA->m_angular_velocity, ab);
+		float angularSpeedB = bodyB->shape->fastestLinearSpeed(bodyB->m_angular_velocity, ab * -1.0f);
+		orthoSpeed += angularSpeedA + angularSpeedB;
+		if (orthoSpeed <= 0.0f) { break; }
+
+		float timeToGo = contact.seperation_distance / orthoSpeed;
+		if (timeToGo > dt) { break; }
+
+		dt -= timeToGo;
+		toi += timeToGo;
+		bodyA->Update(timeToGo);
+		bodyB->Update(timeToGo);
+	}
+
+	// unwind the clock
+	bodyA->Update(-toi);
+	bodyB->Update(-toi);
+	return false;
 }
