@@ -80,12 +80,13 @@ int main() {
 		// set sampler2D
 		shaderProgram.setInt("diffuse_sampler", 0); // texture unit 0
 		float delta_time = glfwGetTime() - current_frame_time;
-		int  num = 100;
+		int  num = 1;
+		float fixed_time=0.0001f;
 		for (int i = 0; i < num; i++) {
-			sphere_scene.Update(delta_time);
+			sphere_scene.Update(fixed_time);
 		}
 		sphere_scene.Draw(shaderProgram);
-		Process_Input(window,delta_time);
+		Process_Input(window,fixed_time);
 	
 		glfwPollEvents();
 		glfwSwapBuffers(window);

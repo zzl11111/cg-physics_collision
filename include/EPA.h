@@ -22,4 +22,5 @@ float EPA_expand(const Body * bodyA, const Body * bodyB, const float bias, const
 
 bool GJK_doesIntersect(const Body * bodyA, const Body * bodyB, const float bias, glm::vec3 & ptOnA, glm::vec3 & ptOnB);
 
-bool conservativeAdvance(Body * bodyA, Body * bodyB, float dt, Contact & contact);
+bool ConservativeAdvance(Body &bodyA, Body & bodyB, float dt, Contact & contact);
+inline bool check_collision(Body &body1,Body &body2,Contact &contact);

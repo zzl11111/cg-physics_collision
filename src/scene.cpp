@@ -21,23 +21,49 @@ void Scene::Create_Scene() {
   //   }
   // }
   // massive_sphere
+  for (int x = 0; x < 6; x++) {
+    for (int y = 0; y < 6; y++) {
+      float radius = 0.5f;
+      Body obj;
+  	obj.shape = new Sphere(radius);
+
+      float xx = float(x - 1) * radius * 2.0f;
+      float yy = float(y - 1) * radius * 2.0f;
   Body box;
-  box.m_position = glm::vec3(0, 1, 10);
+  box.m_position = glm::vec3(xx, 2.0f, yy);
   box.m_linear_velocity = glm::vec3(0, 0, 0);
   box.m_angular_velocity = glm::vec3(0, 0, 0);
-  box.m_inv_mass = 0.0002f;
-  box.elasticity = 1.1f;
-  box.m_friction = 0.5f;
+  box.m_inv_mass = 0.2f;
+  box.elasticity = 0.1f;
+  box.m_friction = 0.8f;
   box.m_rotation = glm::quat(1, 0, 0, 0);
   std::vector<glm::vec3> box_points;
-  glm::vec3 mins(-1, 0, -3);
+  glm::vec3 mins(-1, 0, -1);
   glm::vec3 maxs(0, 1, 1);
   Bounds m_bounds;
   m_bounds.mins = mins;
   m_bounds.maxs = maxs;
   box.shape = new Box(mins, maxs);
-  // test for box
   objs.push_back(box);
+    }
+  }
+  // Body box;
+  // box.m_position = glm::vec3(0, 1, 10);
+  // box.m_linear_velocity = glm::vec3(0, 0, 0);
+  // box.m_angular_velocity = glm::vec3(0, 0, 0);
+  // box.m_inv_mass = 0.0002f;
+  // box.elasticity = 0.1f;
+  // box.m_friction = 0.5f;
+  // box.m_rotation = glm::quat(1, 0, 0, 0);
+  // std::vector<glm::vec3> box_points;
+  // glm::vec3 mins(-1, 0, -3);
+  // glm::vec3 maxs(0, 1, 1);
+  // Bounds m_bounds;
+  // m_bounds.mins = mins;
+  // m_bounds.maxs = maxs;
+  // box.shape = new Box(mins, maxs);
+  // // test for box
+  // objs.push_back(box);
   Body ground(new Sphere(1000), glm::vec3(0, -1003, 0), glm::vec3(0, 0, 0),
               glm::quat(1, 0, 0, 0), 0);
   ground.elasticity = 0.9f;
@@ -103,83 +129,12 @@ void Scene::Draw(const Shader &shader_prog) {
     obj.shape->Draw();
   }
 }
-bool check_collision(Body &body1, Body &body2, Contact &contact) {
-  contact.A = &body1;
-  contact.B = &body2;
-  contact.time_of_impact = 0.0f;
-  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) 
-  {
-    const Sphere *sphereA = (const Sphere *)body1.shape;
-    const Sphere *sphereB = (const Sphere *)body2.shape;
-    glm::vec3 position_A = body1.m_position;
-    glm::vec3 position_B = body2.m_position;
-    if (Sphere_Sphere_Static(sphereA, sphereB, position_A, position_B,
-                             contact.A_potential_collision_point_world_space,
-                             contact.B_potential_collision_point_world_space)) {
-      contact.normal = position_A - position_B;
-      if (glm::length(contact.normal) != 0) {
-        contact.normal = glm::normalize(contact.normal);
-      }
-      contact.A_potential_collision_point_local_space =
-          body1.World_To_Local_space(
-              contact.A_potential_collision_point_world_space);
-      contact.B_potential_collision_point_local_space =
-          body2.World_To_Local_space(
-              contact.B_potential_collision_point_world_space);
-      glm::vec3 ab = body2.m_position - body1.m_position;
-      float r = glm::length(ab) - (sphereA->radius + sphereB->radius);
-      contact.seperation_distance = r;
-      return true;
-    }
-    
-  } 
-else {
-    glm::vec3 pt_A;
-    glm::vec3 pt_B;
-    float bias = 0.001f;
-    if (GJK_doesIntersect(contact.A, contact.B, bias, pt_A, pt_B)) {
-      glm::vec3 norm = pt_B - pt_A;
-      if (glm::length(norm) != 0) {
-        norm = glm::normalize(norm);
-      }
-      pt_A -= norm * bias;
-      pt_B += norm * bias;
-      contact.normal = norm;
-      contact.A_potential_collision_point_world_space = pt_A;
-      contact.B_potential_collision_point_world_space = pt_B;
-      // set the local
-      contact.A_potential_collision_point_local_space =
-          body1.World_To_Local_space(
-              contact.A_potential_collision_point_world_space);
-      contact.B_potential_collision_point_local_space =
-          body2.World_To_Local_space(
-              contact.B_potential_collision_point_world_space);
-      glm::vec3 ab = body2.m_position - body1.m_position;
-      float r = glm::length(pt_A - pt_B);
-      contact.seperation_distance = -r;
-      return true;
-    }
 
-  GJK_Closest_Points(body1, body2, pt_A, pt_B);
-  contact.A_potential_collision_point_world_space = pt_A;
-  contact.B_potential_collision_point_world_space = pt_B;
-  // set the local
-  contact.A_potential_collision_point_local_space = body1.World_To_Local_space(
-      contact.A_potential_collision_point_world_space);
-  contact.B_potential_collision_point_local_space = body2.World_To_Local_space(
-      contact.B_potential_collision_point_world_space);
-  glm::vec3 ab = body2.m_position - body1.m_position;
-  float r = glm::length(pt_A - pt_B);
-
-  contact.seperation_distance = r;
-  }
-
-  return false;
-}
 bool check_collision(Body &body1, Body &body2, Contact &contact, float dt) {
   contact.A = &body1;
   contact.B = &body2;
-  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) {
+  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) 
+  {
     const Sphere *sphere_A = (const Sphere *)body1.shape;
     const Sphere *sphere_B = (const Sphere *)body2.shape;
     if (Sphere_Sphere_Dynamic(sphere_A, sphere_B, body1.m_position,
@@ -206,9 +161,16 @@ bool check_collision(Body &body1, Body &body2, Contact &contact, float dt) {
       contact.seperation_distance = r;
       return true;
     } else {
+
+
       return false;
     }
+
   }
+      else{
+            bool result=ConservativeAdvance(body1, body2,dt, contact);
+      return result;
+    }
   return false;
   // this function will check collision and update the collision point in
   // contact

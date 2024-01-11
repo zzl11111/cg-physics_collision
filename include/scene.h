@@ -15,7 +15,7 @@
 #include "EPA.h"
 inline bool check_collision(Body &body1, Body &body2, Contact &contact, float dt);
 inline void Process_collision(Contact &contact);
-inline bool check_collisiion(Body &body1,Body &body2,Contact &contact);
+
 class Scene {
 public:
   Scene() { Create_Scene(); }
@@ -25,6 +25,6 @@ public:
 
 private:
   std::vector<Body> objs;
-  glm::vec3 gravity = glm::vec3(0, -9.8, 0);
+  glm::vec3 gravity = glm::vec3(0, -100.0f, 0);
 };
 

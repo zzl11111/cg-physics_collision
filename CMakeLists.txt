@@ -41,6 +41,7 @@ add_library(libmain
 	src/scene.cpp
     src/box.cpp
     src/gjk.cpp
+    src/epa.cpp
     ${GLAD_SRC}
 )
 target_include_directories(libmain

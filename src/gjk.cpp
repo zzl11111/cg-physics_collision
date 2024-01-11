@@ -224,7 +224,7 @@ Point_t get_support(const Body &bodyA, const Body &bodyB, glm::vec3 &dir,
   point.xyz = point.point_A - point.point_B;
   return point;
 }
-bool SimplexSignedVolumes(const std::vector<Point_t> &pts, int num,
+bool SimplexSignedVolumes( std::vector<Point_t> &pts, int num,
                           glm::vec3 &new_dir, glm::vec4 &lambda_out) {
   float epsilon = 1e-8;
   lambda_out = glm::vec4(0, 0, 0, 0);
@@ -269,7 +269,7 @@ bool HasPoint(const std::vector<Point_t> &simplexPoints,
               const Point_t &new_pt) {
   float epsilon = 1e-6f;
   for (int i = 0; i < 4; i++) {
-    glm::vec3 delta = simplexPoints[i].xyz;
+    glm::vec3 delta = simplexPoints[i].xyz-new_pt.xyz;
     if (dot(delta, delta) < epsilon) {
       return true;
     }
@@ -350,8 +350,7 @@ bool GJK_Intersect(const Body &bodyA, const Body &bodyB) {
 
   return ContainOrigin;
 }
-void GJK_Closest_Points(const Body &BodyA, const Body &BodyB, glm::vec3 &pt_A,
-                        glm::vec3 pt_B) {
+void GJK_Closest_Points( Body &BodyA, Body &BodyB,glm::vec3 &pt_A,glm::vec3 &pt_B) {
   glm::vec3 origin(0);
   float closetDist = 1e10f;
   float bias = 0.0f;
