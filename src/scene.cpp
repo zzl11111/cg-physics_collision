@@ -4,88 +4,155 @@
 #include "utility.h"
 
 void Scene::Create_Scene() {
-	int caseId = 2;
-	switch (caseId) {
-		case 1:
-		{
-			Body sphere;
-			sphere.shape = new Sphere(0.5f);
-			sphere.m_linear_velocity = glm::vec3(-100, 0, 0);
-			sphere.m_angular_velocity = glm::vec3(0, 0, 0);
-			sphere.m_inv_mass = 0.16f;
-			sphere.elasticity = 0.4f;
-			sphere.m_friction = 0.5f;
-			sphere.m_rotation = glm::quat(1, 0, 0, 0);
-			sphere.m_position = glm::vec3(4.0f, -1.7f, 0);
-			objs.push_back(sphere);
+  int caseId = 3;
+  switch (caseId) {
+  case 1: {
+    Body sphere;
+    sphere.shape = new Sphere(0.5f);
+    sphere.m_linear_velocity = glm::vec3(-100, 0, 0);
+    sphere.m_angular_velocity = glm::vec3(0, 0, 0);
+    sphere.m_inv_mass = 0.002f;
+    sphere.elasticity = 0.4f;
+    sphere.m_friction = 0.5f;
+    sphere.m_rotation = glm::quat(1, 0, 0, 0);
+    sphere.m_position = glm::vec3(4.0f, -1.7f, 0);
+    objs.push_back(sphere);
 
-			for (int x = 0; x < 3; x++) {
-				for (int y = 0; y < 3; y++) {
-					float radius = 0.5f;
+    for (int x = 0; x < 3; x++) {
+      for (int y = 0; y < 3; y++) {
+        float radius = 0.5f;
 
-					float xx = float(x - 1) * radius * 2.0f;
-					float yy = float(y - 1) * radius * 2.0f;
-					Body box;
-					box.m_position = glm::vec3(0.0f, xx - 2.0f, yy);
-					box.m_linear_velocity = glm::vec3(0, 0, 0);
-					box.m_angular_velocity = glm::vec3(0, 0, 0);
-					box.m_inv_mass = 0.2f;
-					box.elasticity = 0.1f;
-					box.m_friction = 0.8f;
-					box.m_rotation = glm::quat(1, 0, 0, 0);
-					std::vector<glm::vec3> box_points;
-					glm::vec3 mins(-1, 0, 0);
-					glm::vec3 maxs(0, 1, 1);
-					Bounds m_bounds;
-					m_bounds.mins = mins;
-					m_bounds.maxs = maxs;
-					box.shape = new Box(mins, maxs);
-					objs.push_back(box);
-				}
-			}
-			Body ground(new Box(glm::vec3(-10, -1, -10),glm::vec3(10, 1, 10)), glm::vec3(0, -4, 0), glm::vec3(0, 0, 0),
-			  glm::quat(1, 0, 0, 0), 0);
-			ground.elasticity = 0.9f;
-			ground.m_friction = 1.03f;
-			objs.push_back(ground);
-			break;
-		}
+        float xx = float(x - 1) * radius * 2.0f;
+        float yy = float(y - 1) * radius * 2.0f;
+        Body box;
+        box.m_position = glm::vec3(0.0f, xx - 2.0f, yy);
+        box.m_linear_velocity = glm::vec3(0, 0, 0);
+        box.m_angular_velocity = glm::vec3(0, 0, 0);
+        box.m_inv_mass = 0.2f;
+        box.elasticity = 0.1f;
+        box.m_friction = 0.8f;
+        box.m_rotation = glm::quat(1, 0, 0, 0);
+        std::vector<glm::vec3> box_points;
+        glm::vec3 mins(-1, 0, 0);
+        glm::vec3 maxs(0, 1, 1);
+        Bounds m_bounds;
+        m_bounds.mins = mins;
+        m_bounds.maxs = maxs;
+        box.shape = new Box(mins, maxs);
+        objs.push_back(box);
+      }
+    }
+    Body ground(new Box(glm::vec3(-10, -1, -10), glm::vec3(10, 1, 10)),
+                glm::vec3(0, -4, 0), glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0),
+                0);
+    ground.elasticity = 0.9f;
+    ground.m_friction = 1.03f;
+    objs.push_back(ground);
+    break;
+  }
 
-		// case 2: boxes fallen on the ground
-		case 2: {
-			for (int x = 0; x < 3; x++) {
-				for (int y = 0; y < 3; y++) {
-					float radius = 0.7f;
+  // case 2: boxes fallen on the ground
+  case 2: {
+    for (int x = 0; x < 3; x++) {
+      for (int y = 0; y < 3; y++) {
+        float radius = 0.7f;
 
-					float xx = float(x - 1) * radius * 2.0f;
-					float yy = float(y - 1) * radius * 2.0f;
-					Body box;
-					box.m_position = glm::vec3((x % 2 == 1 ? -1 : 1) * y, xx + 1.0f, yy);
-					box.m_linear_velocity = glm::vec3(0, 0, 0);
-					box.m_angular_velocity = glm::vec3(0, 0, 0);
-					box.m_inv_mass = 0.2f;
-					box.elasticity = 0.1f;
-					box.m_friction = 0.8f;
-					box.m_rotation = glm::quat(1, 0, 0, 0);
-					std::vector<glm::vec3> box_points;
-					glm::vec3 mins(-1, 0, 0);
-					glm::vec3 maxs(0, 1, 1);
-					Bounds m_bounds;
-					m_bounds.mins = mins;
-					m_bounds.maxs = maxs;
-					box.shape = new Box(mins, maxs);
-					objs.push_back(box);
-				}
-			}
-			Body ground(new Box(glm::vec3(-10, -1, -10),glm::vec3(10, -0.7f, 10)), glm::vec3(0, -4, 0), glm::vec3(0, 0, 0),
-			  get_quat_from_n_and_angle(glm::vec3(0, 0, 1.0f), -45.0f / 180.0f * PI), 0);
-			ground.elasticity = 0.9f;
-			ground.m_friction = 1.03f;
-			objs.push_back(ground);
-			break;
-		}
-	}
-	// case 1: 36 spheres
+        float xx = float(x - 1) * radius * 2.0f;
+        float yy = float(y - 1) * radius * 2.0f;
+        Body box;
+        box.m_position = glm::vec3((x % 2 == 1 ? -1 : 1) * y, xx + 1.0f, yy);
+        box.m_linear_velocity = glm::vec3(0, 0, 0);
+        box.m_angular_velocity = glm::vec3(0, 0, 0);
+        box.m_inv_mass = 0.2f;
+        box.elasticity = 0.1f;
+        box.m_friction = 0.8f;
+        box.m_rotation = glm::quat(1, 0, 0, 0);
+        std::vector<glm::vec3> box_points;
+        glm::vec3 mins(-1, 0, 0);
+        glm::vec3 maxs(0, 1, 1);
+        Bounds m_bounds;
+        m_bounds.mins = mins;
+        m_bounds.maxs = maxs;
+        box.shape = new Box(mins, maxs);
+        objs.push_back(box);
+      }
+    }
+    Body ground(
+        new Box(glm::vec3(-10, -1, -10), glm::vec3(10, -0.0f, 10)),
+        glm::vec3(0, -4, 0), glm::vec3(0, 0, 0),
+        get_quat_from_n_and_angle(glm::vec3(0, 0, 1.0f), -45.0f / 180.0f * PI),
+        0.00f);
+    ground.elasticity = 0.9f;
+    ground.m_friction = 1.03f;
+    objs.push_back(ground);
+    break;
+  }
+  case 3:
+    Body wall(
+        new Box(glm::vec3(-10, -1, -10), glm::vec3(10, -0.7f, 10)),
+        glm::vec3(-10, 5, 0), glm::vec3(0, 0, 0),
+        get_quat_from_n_and_angle(glm::vec3(0, 0, 1.0f), -90.0f / 180.0f * PI),
+        0);
+    wall.elasticity = 0.9f;
+    wall.m_friction = 1.03f;
+    objs.push_back(wall);
+    Body ground(
+        new Box(glm::vec3(-10, -1, -10), glm::vec3(50, -0.7f, 10)),
+        glm::vec3(0, -4, 0), glm::vec3(0, 0, 0),
+        get_quat_from_n_and_angle(glm::vec3(0, 0, 1.0f), -0.0f / 180.0f * PI),
+        0);
+    ground.elasticity = 0.9f;
+    ground.m_friction = 0.2f;
+    for (int x = 0; x < 4; x++) {
+      for (int y = 0; y < 4; y++) {
+        float radius = 0.5f;
+        Body obj;
+        obj.shape = new Sphere(radius);
+
+        float xx = float(x - 1) * radius * 2.0f;
+        float yy = float(y - 1) * radius * 2.0f;
+        obj.m_position = glm::vec3(xx, 2.0f, yy);
+        obj.m_linear_velocity = glm::vec3(-100, 0, 0);
+        obj.m_angular_velocity = glm::vec3(0, 0, 0);
+        obj.m_inv_mass = 100.0f;
+        obj.elasticity = 1.1f;
+        obj.m_friction = 0.5f;
+        obj.m_rotation = glm::quat(1, 0, 0, 0);
+        objs.push_back(obj);
+      }
+    }
+    objs.push_back(ground);
+    Body box;
+    box.m_position = glm::vec3(3, -3, -2);
+    box.m_linear_velocity = glm::vec3(-100.0f, 0, 0);
+    box.m_angular_velocity = glm::vec3(0, 0, 0);
+    box.m_inv_mass = 1000.0f;
+    box.elasticity = 0.99f;
+    box.m_friction = 0.02f;
+    box.m_rotation = glm::quat(1, 0, 0, 0);
+    std::vector<glm::vec3> box_points;
+    glm::vec3 mins(-1, 0, 0);
+    glm::vec3 maxs(0, 1, 1);
+    Bounds m_bounds;
+    m_bounds.mins = mins;
+    m_bounds.maxs = maxs;
+    float radius = 0.8f;
+    box.shape = new Sphere(0.8f);
+    objs.push_back(box);
+    Body sphere;
+    sphere.m_position = glm::vec3(10, 1, -2);
+    sphere.m_linear_velocity = glm::vec3(-4, 0, 0);
+    sphere.m_angular_velocity = glm::vec3(0, 0, 0);
+    sphere.m_inv_mass = 1.0f;
+    sphere.elasticity = 0.99f;
+    sphere.m_friction = 0.02f;
+    sphere.m_rotation = glm::quat(1, 0, 0, 0);
+    radius = 0.8f;
+    sphere.shape = new Sphere(5.0f);
+    objs.push_back(sphere);
+    break;
+  }
+  // case 1: 36 spheres
   // for (int x = 0; x < 6; x++) {
   //   for (int y = 0; y < 6; y++) {
   //     float radius = 2.0f;
@@ -106,36 +173,35 @@ void Scene::Create_Scene() {
   // }
   // massive_sphere
 
-//   // case 2: 9 boxes fall on the sphere
-//   for (int x = 0; x < 3; x++) {
-//     for (int y = 0; y < 3; y++) {
-//       float radius = 0.5f;
-//       Body obj;
-//   	obj.shape = new Sphere(radius);
+  //   // case 2: 9 boxes fall on the sphere
+  //   for (int x = 0; x < 3; x++) {
+  //     for (int y = 0; y < 3; y++) {
+  //       float radius = 0.5f;
+  //       Body obj;
+  //   	obj.shape = new Sphere(radius);
 
-//       float xx = float(x - 1) * radius * 2.0f;
-//       float yy = float(y - 1) * radius * 2.0f;
-//   Body box;
-//   box.m_position = glm::vec3(xx, 2.0f, yy);
-//   box.m_linear_velocity = glm::vec3(0, 0, 0);
-//   box.m_angular_velocity = glm::vec3(0, 0, 0);
-//   box.m_inv_mass = 0.2f;
-//   box.elasticity = 0.1f;
-//   box.m_friction = 0.8f;
-//   box.m_rotation = glm::quat(1, 0, 0, 0);
-//   std::vector<glm::vec3> box_points;
-//   glm::vec3 mins(-1, 0, -1);
-//   glm::vec3 maxs(0, 1, 1);
-//   Bounds m_bounds;
-//   m_bounds.mins = mins;
-//   m_bounds.maxs = maxs;
-//   box.shape = new Box(mins, maxs);
-//   objs.push_back(box);
-//     }
-//   }
+  //       float xx = float(x - 1) * radius * 2.0f;
+  //       float yy = float(y - 1) * radius * 2.0f;
+  //   Body box;
+  //   box.m_position = glm::vec3(xx, 2.0f, yy);
+  //   box.m_linear_velocity = glm::vec3(0, 0, 0);
+  //   box.m_angular_velocity = glm::vec3(0, 0, 0);
+  //   box.m_inv_mass = 0.2f;
+  //   box.elasticity = 0.1f;
+  //   box.m_friction = 0.8f;
+  //   box.m_rotation = glm::quat(1, 0, 0, 0);
+  //   std::vector<glm::vec3> box_points;
+  //   glm::vec3 mins(-1, 0, -1);
+  //   glm::vec3 maxs(0, 1, 1);
+  //   Bounds m_bounds;
+  //   m_bounds.mins = mins;
+  //   m_bounds.maxs = maxs;
+  //   box.shape = new Box(mins, maxs);
+  //   objs.push_back(box);
+  //     }
+  //   }
 
-// case 4: wall test
-
+  // case 4: wall test
 
   // case 3: box test
   // Body box;
@@ -156,10 +222,9 @@ void Scene::Create_Scene() {
   // // test for box
   // objs.push_back(box);
 
-//   // Sphere ground
-//   Body ground(new Sphere(1000), glm::vec3(0, -1003, 0), glm::vec3(0, 0, 0),
-//               glm::quat(1, 0, 0, 0), 0);
-	
+  //   // Sphere ground
+  //   Body ground(new Sphere(1000), glm::vec3(0, -1003, 0), glm::vec3(0, 0, 0),
+  //               glm::quat(1, 0, 0, 0), 0);
 }
 
 void Scene::Update(float delta_time) {
@@ -224,8 +289,7 @@ void Scene::Draw(const Shader &shader_prog) {
 bool check_collision(Body &body1, Body &body2, Contact &contact, float dt) {
   contact.A = &body1;
   contact.B = &body2;
-  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) 
-  {
+  if (body1.shape->Get_Type() == SPHERE && body2.shape->Get_Type() == SPHERE) {
     const Sphere *sphere_A = (const Sphere *)body1.shape;
     const Sphere *sphere_B = (const Sphere *)body2.shape;
     if (Sphere_Sphere_Dynamic(sphere_A, sphere_B, body1.m_position,
@@ -253,15 +317,13 @@ bool check_collision(Body &body1, Body &body2, Contact &contact, float dt) {
       return true;
     } else {
 
-
       return false;
     }
 
+  } else {
+    bool result = ConservativeAdvance(body1, body2, dt, contact);
+    return result;
   }
-      else{
-            bool result=ConservativeAdvance(body1, body2,dt, contact);
-      return result;
-    }
   return false;
   // this function will check collision and update the collision point in
   // contact
@@ -289,8 +351,8 @@ void Process_collision(Contact &contact) {
   glm::vec3 v_ab = v_A - v_B;
   float Impulse_J_amplitude = (1.0f + elasticity) * dot(v_ab, n) /
                               (angularFactor + A->m_inv_mass + B->m_inv_mass);
-  glm::vec3 Impulse_J = Impulse_J_amplitude * n;
 
+  glm::vec3 Impulse_J = Impulse_J_amplitude * n;
   A->Process_Impulse(contact.A_potential_collision_point_world_space,
                      -Impulse_J);
   B->Process_Impulse(contact.B_potential_collision_point_world_space,
@@ -326,13 +388,14 @@ void Process_collision(Contact &contact) {
     float tB = B->m_inv_mass / (A->m_inv_mass + B->m_inv_mass);
     glm::vec3 ds = contact.B_potential_collision_point_world_space -
                    contact.A_potential_collision_point_world_space;
-	// // std::cout << ds << ' ';
-	// std::cout << contact.B_potential_collision_point_world_space;
-	// std::cout << contact.A_potential_collision_point_world_space;
-	// if (abs(ds.y) > 0.5) {
-	// 	std::cout << contact.B_potential_collision_point_world_space << " and " <<  contact.A_potential_collision_point_world_space << std::endl;
-	// 	std::cout << "seperation: " << contact.seperation_distance << std::endl;
-	// }
+    // // std::cout << ds << ' ';
+    // std::cout << contact.B_potential_collision_point_world_space;
+    // std::cout << contact.A_potential_collision_point_world_space;
+    // if (abs(ds.y) > 0.5) {
+    // 	std::cout << contact.B_potential_collision_point_world_space << " and "
+    // <<  contact.A_potential_collision_point_world_space << std::endl;
+    // 	std::cout << "seperation: " << contact.seperation_distance << std::endl;
+    // }
     A->m_position += ds * tA;
     B->m_position -= ds * tB; // push the A and B to outside
   }
