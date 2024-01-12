@@ -97,7 +97,7 @@ int closestTriangle(const std::vector<class Triangle_t> &triangles,
   int min_index = -1;
   for (int i = 0; i < triangles.size(); i++) {
     float distance =
-        signedDistanceToTriangle(triangles[i], points[0].xyz, points);
+        signedDistanceToTriangle(triangles[i], glm::vec3(0, 0, 0), points);
     if (distance * distance < min_distance * min_distance) {
       min_distance = distance;
       min_index = i;
