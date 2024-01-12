@@ -18,7 +18,7 @@ float last_x;
 float last_y;
 Camera cam(camera_pos, glm::vec3(0, 0, 0));
 glm::vec3 lightPos(1, 3, 2);
-
+bool start=false;
 void Process_Input(GLFWwindow* window, float delta_time) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
 	if (glfwGetKey(window, GLFW_KEY_A)) { cam.Process_camera(LEFT, delta_time); }
@@ -28,6 +28,9 @@ void Process_Input(GLFWwindow* window, float delta_time) {
 	if (glfwGetKey(window, GLFW_KEY_E)) { cam.Process_camera(UP, delta_time); }
 	if (glfwGetKey(window, GLFW_KEY_Q)) { cam.Process_camera(DOWN, delta_time); }
 	if (glfwGetKey(window, GLFW_KEY_B)) { cam.return_to_initial(); }
+	if(glfwGetKey(window,GLFW_KEY_SPACE)){
+start=true;
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xPos, double yPos)
@@ -82,8 +85,10 @@ int main() {
 		float delta_time = glfwGetTime() - current_frame_time;
 		int  num = 1;
 		float fixed_time=0.0001f;
+		if(start){
 		for (int i = 0; i < num; i++) {
 			sphere_scene.Update(fixed_time);
+		}
 		}
 		sphere_scene.Draw(shaderProgram);
 		Process_Input(window,fixed_time);
