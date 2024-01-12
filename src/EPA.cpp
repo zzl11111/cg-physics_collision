@@ -78,6 +78,9 @@ glm::vec3 normalDirection(const Triangle_t &triangle,
   const glm::vec3 b = points[triangle.b].xyz;
   const glm::vec3 c = points[triangle.c].xyz;
   const glm::vec3 normal = glm::cross(b - a, c - a);
+  if (glm::length(normal) == 0) { 
+	return normal;
+  }
   return glm::normalize(normal);
 }
 

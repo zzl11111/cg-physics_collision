@@ -368,6 +368,7 @@ void GJK_Closest_Points( Body &BodyA, Body &BodyB,glm::vec3 &pt_A,glm::vec3 &pt_
     simplexPoints[numPts] = new_Pt;
     numPts++;
     SimplexSignedVolumes(simplexPoints, numPts, new_dir, lambdas);
+	SortValids(simplexPoints,lambdas);
     numPts = NumValids(lambdas);
     float dist = dot(new_dir, new_dir);
     if (dist >= closetDist) {
