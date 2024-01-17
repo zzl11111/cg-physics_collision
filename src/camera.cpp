@@ -49,13 +49,13 @@ glm::mat4 Camera::get_View_Matrix() {
 }
 
 void Camera::Update_vector() {
-    yaw = clamp(yaw, 0.01, 359.0);
-    pitch = clamp(pitch, -89.0, 89.0);
-    camera_front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    camera_front.y = sin(glm::radians(pitch));
-    camera_front.z = -cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-    camera_right = normalize(cross(camera_front, camera_up));
-    camera_up = normalize(cross(camera_right, camera_front));
+    // yaw = clamp(yaw, 0.01, 359.0);
+    // pitch = clamp(pitch, -89.0, 89.0);
+    // camera_front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    // camera_front.y = sin(glm::radians(pitch));
+    // camera_front.z = -cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+    // camera_right = normalize(cross(camera_front, camera_up));
+    // camera_up = normalize(cross(camera_right, camera_front));
 }
 
 void Camera::return_to_initial() {

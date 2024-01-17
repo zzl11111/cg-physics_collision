@@ -227,7 +227,7 @@ void Scene::Create_Scene() {
   //               glm::quat(1, 0, 0, 0), 0);
 }
 
-void Scene::Update(float delta_time) {
+void Scene::Update(float delta_time, bool add_wind) {
   for (int i = 0; i < objs.size(); i++) {
     Body &body = objs[i];
     if (body.m_inv_mass == 0) {
@@ -235,6 +235,20 @@ void Scene::Update(float delta_time) {
     }
     glm::vec3 impulse_gravity = gravity * (1.0f / body.m_inv_mass) * delta_time;
     body.Process_Linear_Impulse(impulse_gravity);
+    if (add_wind) {
+      glm::vec3 wind_force;
+      wind_force.x = std::sin(body.m_position.x * body.m_position.y * time);
+      wind_force.y = std::cos(body.m_position.z * time);
+      wind_force.z = std::sin(std::cos(5 * body.m_position.x *
+                                       body.m_position.y * body.m_position.z));
+      float wind_constant = 0.008;
+      body.Process_Linear_Impulse(wind_constant * wind_force);
+    }
+    time += delta_time;
+    if (time > 1e5f) {
+      time = 0;
+    }
+
     // process the gravity
   }
   std::vector<CollisionPair_t> collisionPairs;

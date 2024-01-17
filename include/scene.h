@@ -20,11 +20,12 @@ class Scene {
 public:
   Scene() { Create_Scene(); }
   void Create_Scene();
-  void Update(float delta_time);
+  void Update(float delta_time,bool add_wind=false);
   void Draw(const Shader &shader_prog);
 
-private:
+public:
   std::vector<Body> objs;
   glm::vec3 gravity = glm::vec3(0, -100.0f, 0);
+  float time=0;
 };
 

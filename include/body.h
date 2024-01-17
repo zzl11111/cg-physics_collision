@@ -124,4 +124,6 @@ public:
 	float elasticity = 1;
 	float m_inv_mass;
 	float m_friction = 0.8f;
+	bool is_changeing=false;
+	float before_changeing_distance=0;
 };
